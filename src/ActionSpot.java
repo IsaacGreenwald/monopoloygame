@@ -25,19 +25,29 @@ public class ActionSpot implements Spot {
 
     @Override
     public void onABoardSpot(Player player) {
-        switch (actionType) {
-            case GO:
-                // Give player $200 if they pass GO (not on game start)
-                break;
-            case CHANCE:
-                // Draw a chance card
-                break;
-            case COMMUNITY_CHEST:
-                // Draw a community chest card
-                break;
-            // ... handle other actions
-            default:
-            	break;
+    	System.out.println(player.getName() + " landed on " + getName());
+    	switch (actionType) {
+        	case GO:
+        		System.out.println("GO");
+        		break;
+	        case CHANCE:
+	            System.out.println("CHANCE");
+	            break;
+	        case COMMUNITY_CHEST:
+	            System.out.println("COMMUNITY_CHEST");
+	            break;
+	        case JAIL:
+	            System.out.println("JAIL");
+	            break;
+	        case FREE_PARKING:
+	            System.out.println("FREE_PARKING");
+	            break;
+	        case GO_TO_JAIL:
+	            System.out.println("GO_TO_JAIL");
+	            break;
+	        default:
+	            System.out.println("UNKNOWN ACTION");
+	            break;
         }
     }
 
