@@ -14,7 +14,7 @@ public class Property implements Spot {
      */
     public Property(String name, int price) {
         this.name = name;
-        this.price = price;
+        this.setPrice(price);
     }
 
     @Override
@@ -24,8 +24,15 @@ public class Property implements Spot {
 
 	@Override
 	public void onABoardSpot(Player player) {
-		// TODO Auto-generated method stub
-		
+		System.out.println(player.getName() + " landed on " + getName());		
+	}
+
+	public int getPrice() {
+		return price;
+	}
+
+	public void setPrice(int price) {
+		this.price = price;
 	}
 
 }
