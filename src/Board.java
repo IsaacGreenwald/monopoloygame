@@ -3,7 +3,7 @@
  * Represents the Monopoly game board.
  */
 public class Board {
-    private final int SIZE = 40;
+    private static final int SIZE = 40;
     private Spot[] spots = new Spot[SIZE];
 
     /**
@@ -68,4 +68,9 @@ public class Board {
     public Spot getSpot(int position) {
         return spots[position % SIZE];
     }
+    
+    public static int getSize() {
+		return SIZE;
+	} 
+
 }
