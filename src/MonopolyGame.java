@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 /**
  * Represents the core Monopoly game logic and handling player setup
@@ -24,7 +25,8 @@ public class MonopolyGame {
             System.out.println("\n" + player.getName() + ", it's your turn.");
             System.out.println("Choose an option:");
             System.out.println("1. Roll Dice");
-            System.out.println("2. Exit");
+            System.out.println("2. Mortgage/Unmortgage Property"); 
+            System.out.println("3. Exit");
 
             int choice = scanner.nextInt();
 
@@ -34,6 +36,9 @@ public class MonopolyGame {
                     System.out.println(player.getName() + " rolled a total of " + roll);
                     break;
                 case 2:
+                    mortgageOrUnmortgageProperty(player);
+                    break;
+                case 3:
                     System.out.println("Goodbye!");
                     gameOver = true;
                     break;
@@ -42,7 +47,41 @@ public class MonopolyGame {
             }
         }
 
-        scanner.close();
+    }
+ 
+   
+    /**
+     * Represents a method to mortgage or unmortgage a property for a player in the Monopoly game.
+     * @param player - represents the main player of the game. 
+     */
+    private void mortgageOrUnmortgageProperty(Player player) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Choose a property to mortgage/unmortgage:");
+        ArrayList<Property> properties = player.getProperties();
+
+        // show on terminal a list of the player's properties and their mortgage status
+        for (int i = 0; i < properties.size(); i++) {
+            Property property = properties.get(i);
+            String status = property.isMortgaged() ? " (Mortgaged)" : "";
+            System.out.println((i + 1) + ". " + property.getName() + status);
+        }
+
+        int choice = scanner.nextInt();
+
+        // Check if the user's choice is within the valid range
+        if (choice >= 1 && choice <= properties.size()) {
+            Property selectedProperty = properties.get(choice - 1);
+
+            // Check if the selected property is mortgaged or not then mortgage/unmortgage 
+            if (selectedProperty.isMortgaged()) {
+                selectedProperty.unmortgage();
+            } else {
+                selectedProperty.mortgage();
+            }
+        } else {
+            System.out.println("Invalid choice. Please choose a valid property.");
+        }
     }
 
     private String getPlayerName(Scanner scanner) {
