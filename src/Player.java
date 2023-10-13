@@ -81,6 +81,7 @@ public class Player {
                 } else {
                     // Player rolled doubles take another turn
                     System.out.println(getName() + " rolled doubles!!! Ha Roll again.");
+		    move(board);
                     return roll; // Return the dice roll value for the current turn
                 }
             } else {
