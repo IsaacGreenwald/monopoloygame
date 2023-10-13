@@ -8,6 +8,9 @@ public class Property implements Spot {
     private int price;
     private Player owner;
     private int rent;
+    private boolean mortgaged = false;
+    private int mortgageValue; 
+
 
     /**
      * Constructs a new Property with the specified name and price.
@@ -15,10 +18,12 @@ public class Property implements Spot {
      * @param name  The name of the property.
      * @param price The purchase price of the property.
      */
-    public Property(String name, int price, int startingRent) {
+    public Property(String name, int price, int startingRent, int mortgageValue) {
     	this.rent = startingRent;
         this.name = name;
         this.setPrice(price);
+        this.mortgageValue = mortgageValue;
+
     }
 
     @Override
@@ -85,10 +90,60 @@ public class Property implements Spot {
 					System.out.println("\nPlease enter Y or N");
 				}
 			}
-			in.close();
 		}
 	
 }
+	
+	  /**
+     * Mortgage the property.
+     *
+     * @return True if the property was successfully mortgaged
+     */
+    public boolean mortgage() {
+        if (mortgaged) {
+            System.out.println("This property is already mortgaged.");
+            return false;
+        }
+
+        owner.setMoney(owner.getMoney() + mortgageValue);
+        mortgaged = true;
+        System.out.println(owner.getName() + " mortgaged " + getName() + " for $" + mortgageValue);
+        return true;
+    }
+
+    /**
+     * Unmortgage the property.
+     *
+     * @return True if the property was successfully unmortgaged—
+     */
+    public boolean unmortgage() {
+        if (!mortgaged) {
+            System.out.println("This property is not mortgaged.");
+            return false;
+        }
+
+        if (owner.getMoney() < mortgageValue) {
+            System.out.println(owner.getName() + " does not have enough money to unmortgage " + getName() + ".");
+            return false;
+        }
+
+        owner.setMoney(owner.getMoney() - mortgageValue);
+        mortgaged = false;
+        System.out.println(owner.getName() + " unmortgaged " + getName() + " for $" + mortgageValue);
+        return true;
+    }
+    
+    
+    /**
+     * Check if the property is mortgaged.
+     *
+     * @return True if the property is mortgaged
+     */
+    public boolean isMortgaged() {
+        return mortgaged;
+    }
+    
+ 
 
 	public int getPrice() {
 		return price;
