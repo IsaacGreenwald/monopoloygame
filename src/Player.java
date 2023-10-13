@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 
 /**
  * Represents a player in the Monopoly game, including their name, money, and position.
@@ -7,13 +8,16 @@ public class Player {
     private int money;         	// Amount of money the player has
     private int position;      	// Position of the player on the board
     private boolean inJail; 	//Check if player is in Jail
-    private int jailTurns; 		// Add a field to track the remaining jail turns
+    private int jailTurns;    // Add a field to track the remaining jail turns
+    private ArrayList<Property> cards;
+
 
     /**
      * Constructs a new player with the given name and initializes starting money and position.
      * @param name Name of the player.
      */
     public Player(String name) {
+    	cards = new ArrayList<Property>();
         this.setName(name);
         this.setMoney(1500); // starting amount in Monopoly
         this.setPosition(0);
@@ -77,6 +81,10 @@ public class Player {
     
     public void setJailTurns(int jailTurns) {
         this.jailTurns = jailTurns;
+    }
+    
+    public void addProperty(Property property) {
+    	cards.add(property);
     }
 
     // Getters and setters

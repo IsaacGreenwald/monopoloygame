@@ -32,7 +32,7 @@ public class ActionSpot implements Spot {
 	            break;
 	        case PROPERTY: // NOT USED AS OF NOW
 	            System.out.println("PROPERTY");
-	            break;
+	            
 	        case CHANCE:
 	            System.out.println("CHANCE");
 	            break;
@@ -83,5 +83,9 @@ public class ActionSpot implements Spot {
         PROPERTY, RAILROAD, UTILITY
         // add other types as needed
     }
+    
+    
+    
+    
 
 }
