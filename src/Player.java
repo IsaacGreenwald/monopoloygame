@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 
 /**
  * Represents a player in the Monopoly game, including their name, money, and position.
@@ -6,12 +7,14 @@ public class Player {
     private String name;       // Name of the player
     private int money;         // Amount of money the player has
     private int position;      // Position of the player on the board
+    private ArrayList<Property> cards;
 
     /**
      * Constructs a new player with the given name and initializes starting money and position.
      * @param name Name of the player.
      */
     public Player(String name) {
+    	cards = new ArrayList<Property>();
         this.setName(name);
         this.setMoney(1500); // starting amount in Monopoly
         this.position = 0;
@@ -40,6 +43,10 @@ public class Player {
         Spot currentSpot = board.getSpot(position); // Retrieves the spot player landed on
         currentSpot.onABoardSpot(this); // Triggers spot-specific actions
         return roll;  // Returns the dice roll value
+    }
+    
+    public void addProperty(Property property) {
+    	cards.add(property);
     }
 
     // Getters and setters
