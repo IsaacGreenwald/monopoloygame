@@ -32,7 +32,7 @@ public class ActionSpot implements Spot {
 	            break;
 	        case PROPERTY: // NOT USED AS OF NOW
 	            System.out.println("PROPERTY");
-	            break;
+	            
 	        case CHANCE:
 	            System.out.println("CHANCE");
 	            break;
@@ -58,6 +58,7 @@ public class ActionSpot implements Spot {
 	            System.out.println("FREE PARKING");
 	            break;
 	        case GO_TO_JAIL:
+                sendToJail(player);
 	            System.out.println("GO TO JAIL");
 	            break;
 	        default:
@@ -65,6 +66,14 @@ public class ActionSpot implements Spot {
 	            break;
         }
     }
+    
+    private void sendToJail(Player player) {
+        player.setInJail(true);
+        player.setJailTurns(2); // Set the number of jail turns
+        player.setPosition(10); // Set the position to the jail spot
+        System.out.println(player.getName() + " goes to jail.");
+    }
+
 
     /**
      * Enumerates the types of actions spots can have.
@@ -74,5 +83,9 @@ public class ActionSpot implements Spot {
         PROPERTY, RAILROAD, UTILITY
         // add other types as needed
     }
+    
+    
+    
+    
 
 }
