@@ -3,9 +3,11 @@
  * Represents a player in the Monopoly game, including their name, money, and position.
  */
 public class Player {
-    private String name;       // Name of the player
-    private int money;         // Amount of money the player has
-    private int position;      // Position of the player on the board
+    private String name;       	// Name of the player
+    private int money;         	// Amount of money the player has
+    private int position;      	// Position of the player on the board
+    private boolean inJail; 	//Check if player is in Jail
+    private int jailTurns; 		// Add a field to track the remaining jail turns
 
     /**
      * Constructs a new player with the given name and initializes starting money and position.
@@ -14,7 +16,9 @@ public class Player {
     public Player(String name) {
         this.setName(name);
         this.setMoney(1500); // starting amount in Monopoly
-        this.position = 0;
+        this.setPosition(0);
+        this.inJail = false; // Initialize the inJail flag
+        this.jailTurns = 0; // Initialize jailTurns
     }
 
     /**
@@ -35,11 +39,44 @@ public class Player {
      * @return The total value of the dice roll which determined the move.
      */
     public int move(Board board) {
-        int roll = rollDice(); // Gets the combined dice roll result
-        position = (position + roll) % Board.getSize(); // Updates player's position considering board wrapping
-        Spot currentSpot = board.getSpot(position); // Retrieves the spot player landed on
-        currentSpot.onABoardSpot(this); // Triggers spot-specific actions
-        return roll;  // Returns the dice roll value
+        if (inJail) {
+            // Player is in jail
+            if (jailTurns > 0) {
+                jailTurns--;
+                return 0; // Player doesn't move on this turn
+            } else {
+                // Player's jail time is up, let them continue from jail position
+                inJail = false;
+            }
+        } else {
+            // Handle normal movement
+            int roll = rollDice();
+            setPosition((getPosition() + roll) % Board.getSize());
+            Spot currentSpot = board.getSpot(getPosition());
+            currentSpot.onABoardSpot(this);
+            return roll; // Return the dice roll value for normal movement
+        }
+
+        return 0; // Return 0 when in jail
+    }
+
+
+    // Method to check if the player is in jail
+    public boolean isInJail() {
+        return inJail;
+    }
+
+    // Method to set the player's jail status
+    public void setInJail(boolean inJail) {
+        this.inJail = inJail;
+    }
+    
+    public int getJailTurns() {
+        return jailTurns;
+    }
+    
+    public void setJailTurns(int jailTurns) {
+        this.jailTurns = jailTurns;
     }
 
     // Getters and setters
@@ -75,4 +112,13 @@ public class Player {
     public void setMoney(int money) {
         this.money = money;
     }
+
+	public int getPosition() {
+		return position;
+	}
+
+	public void setPosition(int position) {
+		this.position = position;
+	}
+    
 }
