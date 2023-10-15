@@ -1,18 +1,18 @@
+import javafx.scene.layout.GridPane;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import javafx.scene.layout.StackPane;
 
-/**
- * Represents the Monopoly game board.
- */
-public class Board {
+
+public class Board extends GridPane { // Extends the GridPane to allow easy grid placement
     private static final int SIZE = 40;
     private Spot[] spots = new Spot[SIZE];
 
-    /**
-     * Constructs and initializes a new Monopoly board.
-     */
     public Board() {
         initializeSpots();
+        displayBoard();
     }
-
     /**
      * Initializes the spots on the Monopoly board.
      */
@@ -61,17 +61,42 @@ public class Board {
 
 
     /**
-     * Gets the spot at the given position on the board.
-     * 
-     * @param position The position on the board (0 to 39).
-     * @return The spot at the given position.
+     * Display the board using JavaFX components.
      */
+    private void displayBoard() {
+        int sideSize = (int) Math.sqrt(SIZE); // Assuming a square board for simplicity
+
+        for (int i = 0; i < sideSize; i++) {
+            for (int j = 0; j < sideSize; j++) {
+                int spotIndex = (i * sideSize) + j;
+                if (spotIndex < SIZE) {
+                    Spot spot = spots[spotIndex];
+                    StackPane cell = createCell(spot.getName()); // Create a cell with the spot's name
+                    this.add(cell, j, i); // Add the cell to the grid
+                }
+            }
+        }
+    }
+
+    /**
+     * Create a visual cell for a spot on the board.
+     * 
+     * @param name The name of the spot.
+     * @return A visual representation of the spot.
+     */
+    private StackPane createCell(String name) {
+        Rectangle rect = new Rectangle(50, 50); // Adjust size as needed
+        rect.setStroke(Color.BLACK);
+        rect.setFill(Color.WHITE);
+        Text text = new Text(name);
+        return new StackPane(rect, text); // Overlay the text on top of the rectangle
+    }
+
     public Spot getSpot(int position) {
         return spots[position % SIZE];
     }
-    
-    public static int getSize() {
-		return SIZE;
-	} 
 
+    public static int getSize() {
+        return SIZE;
+    }
 }
