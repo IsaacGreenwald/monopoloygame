@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Represents a player in the Monopoly game, including their name, money, and position.
@@ -11,6 +12,7 @@ public class Player {
     private int jailTurns;         // Add a field to track the remaining jail turns
     private ArrayList<Property> cards;
     private int consecutiveDoubles = 0;
+    private Random random;
 
 
     /**
@@ -33,8 +35,8 @@ public class Player {
      * @return The combined result of the two dice rolls.
      */
     public int rollDice() {
-        int dice1 = (int) (Math.random() * 6) + 1; // Simulates the roll of the first die
-        int dice2 = (int) (Math.random() * 6) + 1; // Simulates the roll of the second die
+        int dice1 = random.nextInt(7); // Simulates the roll of the first die
+        int dice2 = random.nextInt(7); // Simulates the roll of the second die
         return dice1 + dice2; // Returns the sum of the two dice rolls
     }
 
@@ -64,7 +66,7 @@ public class Player {
             Spot currentSpot = board.getSpot(getPosition());
 
             // Check if the player passes Go and award them money: $200
-            if (getPosition() == 0 && oldPosition != 0) {                
+            if (getPosition() < oldPosition && inJail == false) {                
                 setMoney(getMoney() + 200);
                 System.out.println(getName() + " passed 'Go' and collected $200!");
             }
@@ -165,4 +167,5 @@ public class Player {
 	public ArrayList<Property> getProperties() {
 		return this.cards;
 	}
+	
 }
