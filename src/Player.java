@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.Random;
 
+import javafx.scene.image.ImageView;
+
 /**
  * Represents a player in the Monopoly game, including their name, money, and position.
  */
@@ -12,8 +14,10 @@ public class Player {
     private int jailTurns;         // Add a field to track the remaining jail turns
     private ArrayList<Property> cards;
     private int consecutiveDoubles = 0;
-    private Random random;
+    private static Random random;
     private boolean hasGetOutOfJailFreeCard = false;
+    private MonopolyPiece piece;
+    private ImageView tokenImageView;
 
     /**
      * Constructs a new player with the given name and initializes starting money and position.
@@ -27,7 +31,7 @@ public class Player {
         this.setPosition(0);
         this.inJail = false; // Initialize the inJail flag
         this.jailTurns = 0; // Initialize jailTurns
-        this.random = new Random();
+        Player.random = new Random();
     }
 
     /**
@@ -35,7 +39,7 @@ public class Player {
      *
      * @return The combined result of the two dice rolls.
      */
-    public int rollDice() {
+    public static int rollDice() {
     	int dice1 = random.nextInt(6) + 1; // Simulates the roll of the first die
         int dice2 = random.nextInt(6) + 1; // Simulates the roll of the second die
         return dice1 + dice2; // Returns the sum of the two dice rolls
@@ -102,7 +106,6 @@ public class Player {
 
         return roll; // Return the roll value or 0 when in jail
     }
-
 
     // Method to check if the player is in jail
     public boolean isInJail() {
@@ -187,4 +190,21 @@ public class Player {
 	        this.hasGetOutOfJailFreeCard = false;
 	        // Logic to get out of jail
 	    }
+	}
+	
+	public MonopolyPiece getPiece() {
+	    return piece;
+	}
+
+	public void setPiece(MonopolyPiece piece) {
+	    this.piece = piece;
+	}
+	public ImageView getTokenImageView() {
+	    return tokenImageView;
+	}
+
+	public void setTokenImageView(ImageView tokenImageView) {
+	    this.tokenImageView = tokenImageView;
+	}
+
 }
