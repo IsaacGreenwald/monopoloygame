@@ -1,5 +1,6 @@
 import java.util.ArrayList;
-import java.util.Random;
+
+import javafx.scene.image.ImageView;
 
 /**
  * Represents a player in the Monopoly game, including their name, money, and position.
@@ -11,8 +12,8 @@ public class Player {
     private boolean inJail;        // Check if player is in Jail
     private int jailTurns;         // Add a field to track the remaining jail turns
     private ArrayList<Property> cards;
-    private int consecutiveDoubles = 0;
-    private Random random;
+    private MonopolyPiece piece;
+    private ImageView tokenImageView;
 
 
     /**
@@ -20,12 +21,10 @@ public class Player {
      *
      * @param name Name of the player.
      */
-    public Player(String name, int money) {
+    public Player(String name) {
         cards = new ArrayList<Property>();
-        this.money = money;
-        this.name = name;
         this.setName(name);
-        //this.setMoney(1500); // Starting amount in Monopoly
+        this.setMoney(1500); // Starting amount in Monopoly
         this.setPosition(0);
         this.inJail = false; // Initialize the inJail flag
         this.jailTurns = 0; // Initialize jailTurns
@@ -36,67 +35,10 @@ public class Player {
      *
      * @return The combined result of the two dice rolls.
      */
-    public int rollDice() {
+    public static int rollDice() {
         int dice1 = (int) (Math.random() * 6) + 1; // Simulates the roll of the first die
         int dice2 = (int) (Math.random() * 6) + 1; // Simulates the roll of the second die
         return dice1 + dice2; // Returns the sum of the two dice rolls
-    }
-
-    /**
-     * Moves the player around the board based on the result of a dice roll.
-     * This method wraps around the board if the player's movement exceeds its size.
-     * It also triggers any actions associated with the spot they land on.
-     *
-     * @param board The game board on which the player moves.
-     * @return The total value of the dice roll which determined the move.
-     */
-    public int move(Board board) {
-        if (inJail) {
-            // Player is in jail
-            if (jailTurns > 0) {
-                jailTurns--;
-                return 0; // Player doesn't move on this turn
-            } else {
-                // Player's jail time is up, let them continue from jail position
-                inJail = false;
-            }
-        } else {
-            // Handle normal movement
-            int roll = rollDice();
-            int oldPosition = getPosition();
-            setPosition((getPosition() + roll) % Board.getSize());
-            Spot currentSpot = board.getSpot(getPosition());
-
-            // Check if the player passes Go and award them money: $200
-            if (getPosition() < oldPosition && inJail == false) {                
-                setMoney(getMoney() + 200);
-                System.out.println(getName() + " passed 'Go' and collected $200!");
-            }
-
-            // Check if the player rolled doubles
-            int dice1 = rollDice();
-            int dice2 = rollDice();
-            if (dice1 == dice2) {
-                consecutiveDoubles++;
-                if (consecutiveDoubles == 3) {
-                    // Player rolled doubles 3 times in a row send them to jail
-                    inJail = true;
-                    return 0; // Player doesn't move further in this turn
-                } else {
-                    // Player rolled doubles take another turn
-                    System.out.println(getName() + " rolled doubles!!! Ha Roll again.");
-                    return roll; // Return the dice roll value for the current turn
-                }
-            } else {
-                // Reset consecutive doubles counter
-                consecutiveDoubles = 0;
-            }
-
-            currentSpot.onABoardSpot(this);
-            return roll; // Return the dice roll value for normal movement
-        }
-
-        return 0; // Return 0 when in jail
     }
 
 
@@ -170,4 +112,18 @@ public class Player {
 		return this.cards;
 	}
 	
+	public MonopolyPiece getPiece() {
+	    return piece;
+	}
+
+	public void setPiece(MonopolyPiece piece) {
+	    this.piece = piece;
+	}
+	public ImageView getTokenImageView() {
+	    return tokenImageView;
+	}
+
+	public void setTokenImageView(ImageView tokenImageView) {
+	    this.tokenImageView = tokenImageView;
+	}
 }
