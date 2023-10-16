@@ -19,8 +19,6 @@ public class ActionSpot implements Spot {
         this.name = name;
         this.actionType = actionType;
     }
-    
-    
 
     @Override
     public String getName() {
