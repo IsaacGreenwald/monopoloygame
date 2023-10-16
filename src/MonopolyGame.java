@@ -45,7 +45,7 @@ public class MonopolyGame {
 	    Player loadedPlayer = dbOps.loadFirstPlayer();
 
 	    if (loadedPlayer != null) {
-	        Board board = new Board();
+	        Board board = new Board(null);
 	        System.out.println("Game loaded successfully for " + loadedPlayer.getName() + loadedPlayer.getMoney());
 	        continueGameLoop(loadedPlayer, board);
 	        return loadedPlayer;
@@ -112,8 +112,9 @@ public class MonopolyGame {
         String playerName = getPlayerName(scanner1);
         MonopolyPiece chosenPiece = getChosenPiece(scanner1);
 
-        Player player = new Player(playerName + " (" + chosenPiece.getPieceName() + ")", 1500);
-        Board board = new Board();
+        Player player = new Player(playerName + " (" + chosenPiece.getPieceName() + ")");
+        player.setMoney(1500);
+        Board board = new Board(null);
         // Insert the new player into the database
         try {
             dbOps.insertPlayer(player.getName(), player.getMoney(), player.getPosition());

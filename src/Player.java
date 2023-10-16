@@ -14,6 +14,9 @@ public class Player {
     private ArrayList<Property> cards;
     private MonopolyPiece piece;
     private ImageView tokenImageView;
+	private int consecutiveDoubles;
+    private boolean hasGetOutOfJailFreeCard = false;
+
 
 
     /**
@@ -189,5 +192,20 @@ public class Player {
 
 	public void setTokenImageView(ImageView tokenImageView) {
 	    this.tokenImageView = tokenImageView;
+	}
+	
+	public void giveGetOutOfJailFreeCard() {
+	    this.hasGetOutOfJailFreeCard = true;
+	}
+	
+	public boolean hasGetOutOfJailFreeCard() {
+	    return this.hasGetOutOfJailFreeCard;
+	}
+	
+	public void useGetOutOfJailFreeCard() {
+	    if (this.hasGetOutOfJailFreeCard) {
+	        this.hasGetOutOfJailFreeCard = false;
+	        // Logic to get out of jail
+	    }
 	}
 }
