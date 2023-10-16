@@ -14,6 +14,9 @@ public class Player {
     private ArrayList<Property> cards;
     private MonopolyPiece piece;
     private ImageView tokenImageView;
+	private int consecutiveDoubles;
+    private boolean hasGetOutOfJailFreeCard = false;
+
 
 
     /**
@@ -40,6 +43,70 @@ public class Player {
         int dice2 = (int) (Math.random() * 6) + 1; // Simulates the roll of the second die
         return dice1 + dice2; // Returns the sum of the two dice rolls
     }
+
+
+    /**
+     * Moves the player around the board based on the result of a dice roll.
+     * This method wraps around the board if the player's movement exceeds its size.
+     * It also triggers any actions associated with the spot they land on.
+     *
+     * @param board The game board on which the player moves.
+     * @return The total value of the dice roll which determined the move.
+     */
+    public int move(Board board) {
+        int roll = 0;
+
+        if (inJail) {
+            if (hasGetOutOfJailFreeCard()) {
+                System.out.println("Do you want to use your 'get out of jail free' card?");
+                useGetOutOfJailFreeCard();
+                inJail = false; // Assuming they use the card immediately
+            } else if (jailTurns > 0) {
+                jailTurns--;
+                return 0; // Player doesn't move on this turn
+            } else {
+                // Player's jail time is up, let them continue from jail position
+                inJail = false;
+            }
+        }
+
+        if (!inJail) { // If the player is not in jail, then handle the movement
+            roll = rollDice();
+            int oldPosition = getPosition();
+            setPosition((getPosition() + roll) % Board.getSize());
+            Spot currentSpot = board.getSpot(getPosition());
+
+            // Check if the player passes Go and award them money: $200
+            if (getPosition() < oldPosition) {                
+                setMoney(getMoney() + 200);
+                System.out.println(getName() + " passed 'Go' and collected $200!");
+            }
+
+            // Check if the player rolled doubles
+            int dice1 = rollDice();
+            int dice2 = rollDice();
+            if (dice1 == dice2) {
+                consecutiveDoubles++;
+                if (consecutiveDoubles == 3) {
+                    // Player rolled doubles 3 times in a row send them to jail
+                    inJail = true;
+                    return 0; // Player doesn't move further in this turn
+                } else {
+                    // Player rolled doubles take another turn
+                    System.out.println(getName() + " rolled doubles! Roll again.");
+                    return roll; // Return the dice roll value for the current turn
+                }
+            } else {
+                // Reset consecutive doubles counter
+                consecutiveDoubles = 0;
+            }
+
+            currentSpot.onABoardSpot(this);
+        }
+
+        return roll; // Return the roll value or 0 when in jail
+    }
+
 
 
     // Method to check if the player is in jail
@@ -125,5 +192,20 @@ public class Player {
 
 	public void setTokenImageView(ImageView tokenImageView) {
 	    this.tokenImageView = tokenImageView;
+	}
+	
+	public void giveGetOutOfJailFreeCard() {
+	    this.hasGetOutOfJailFreeCard = true;
+	}
+	
+	public boolean hasGetOutOfJailFreeCard() {
+	    return this.hasGetOutOfJailFreeCard;
+	}
+	
+	public void useGetOutOfJailFreeCard() {
+	    if (this.hasGetOutOfJailFreeCard) {
+	        this.hasGetOutOfJailFreeCard = false;
+	        // Logic to get out of jail
+	    }
 	}
 }
