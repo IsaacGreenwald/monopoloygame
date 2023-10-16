@@ -6,6 +6,8 @@
 public class ActionSpot implements Spot {
     private String name;
     private ActionType actionType;
+    private CommunityChestCard communityChestCard;
+    private ChanceCard chanceCard;
 
     /**
      * Constructs a new ActionSpot with the specified name and action type.
@@ -17,10 +19,20 @@ public class ActionSpot implements Spot {
         this.name = name;
         this.actionType = actionType;
     }
+    
+    
 
     @Override
     public String getName() {
         return name;
+    }
+    
+    public void setCommunityCard(CommunityChestCard communityCard) {
+        this.communityChestCard = communityCard;
+    }
+
+    public void setChanceCard(ChanceCard chanceCard) {
+        this.chanceCard = chanceCard;
     }
 
     @Override
@@ -32,12 +44,24 @@ public class ActionSpot implements Spot {
 	            break;
 	        case PROPERTY: // NOT USED AS OF NOW
 	            System.out.println("PROPERTY");
-	            
+	            break;
 	        case CHANCE:
-	            System.out.println("CHANCE");
+	            System.out.println("CHANCE CARD");
+	            chanceCard = new ChanceCard(player);
+	            if (chanceCard != null) {
+	                chanceCard.pickCard();
+	            } else {
+	                System.out.println("No chance card available.");
+	            }
 	            break;
 	        case COMMUNITY_CHEST:
 	            System.out.println("COMMUNITY CHEST");
+	            communityChestCard = new CommunityChestCard(player);
+	            if (communityChestCard != null) {
+	                communityChestCard.pickCard();
+	            } else {
+	                System.out.println("No community chest card available.");
+	            }
 	            break;
 	        case LUXURY_TAX:
 	            System.out.println("LUXURY TAX");
