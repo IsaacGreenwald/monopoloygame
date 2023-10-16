@@ -9,7 +9,7 @@ import java.sql.Statement;
  */
 public class CreateDatabase {
 
-    public static final String PORT_NUMBER = "8889";
+    public static final String PORT_NUMBER = "3306";
     
     public CreateDatabase() {
         // TODO Auto-generated constructor stub
