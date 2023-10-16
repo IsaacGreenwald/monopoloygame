@@ -1,17 +1,17 @@
-
 /**
- * Represents spots on the board that perform specific actions 
- * (e.g., Go, Income Tax, Chance, Community Chest).
+ * Represents specialized spots on the Monopoly board that perform specific actions.
+ * Examples include "Go", "Income Tax", "Chance", and "Community Chest".
  */
 public class ActionSpot implements Spot {
-    private String name;
-    private ActionType actionType;
+
+    private final String name;
+    private final ActionType actionType;
 
     /**
-     * Constructs a new ActionSpot with the specified name and action type.
-     * 
-     * @param name       The name of the action spot.
-     * @param actionType The type of action to be performed.
+     * Initializes a new instance of ActionSpot with the given name and action type.
+     *
+     * @param name       The display name of this spot.
+     * @param actionType The kind of action associated with this spot.
      */
     public ActionSpot(String name, ActionType actionType) {
         this.name = name;
@@ -22,70 +22,68 @@ public class ActionSpot implements Spot {
     public String getName() {
         return name;
     }
-
-    @Override
-    public void onABoardSpot(Player player) {
-    	System.out.println(player.getName() + " landed on " + getName());
-    	switch (actionType) {
-	        case GO:
-	            System.out.println("GO");
-	            break;
-	        case PROPERTY: // NOT USED AS OF NOW
-	            System.out.println("PROPERTY");
-	            
-	        case CHANCE:
-	            System.out.println("CHANCE");
-	            break;
-	        case COMMUNITY_CHEST:
-	            System.out.println("COMMUNITY CHEST");
-	            break;
-	        case LUXURY_TAX:
-	            System.out.println("LUXURY TAX");
-	            break;
-	        case INCOME_TAX:
-	            System.out.println("INCOME TAX");
-	            break;
-	        case RAILROAD: // NOT USED AS OF NOW
-	            System.out.println("RAILROAD");
-	            break;
-	        case UTILITY: // NOT USED AS OF NOW
-	            System.out.println("UTILITY");
-	            break;
-	        case JAIL:
-	            System.out.println("JAIL");
-	            break;
-	        case FREE_PARKING:
-	            System.out.println("FREE PARKING");
-	            break;
-	        case GO_TO_JAIL:
-                sendToJail(player);
-	            System.out.println("GO TO JAIL");
-	            break;
-	        default:
-	            System.out.println("UNKNOWN ACTION");
-	            break;
-        }
+    public ActionType getActionType() {
+        return actionType;
     }
-    
-    private void sendToJail(Player player) {
-        player.setInJail(true);
-        player.setJailTurns(2); // Set the number of jail turns
-        player.setPosition(10); // Set the position to the jail spot
-        System.out.println(player.getName() + " goes to jail.");
-    }
-
 
     /**
-     * Enumerates the types of actions spots can have.
+     * Invoked when a player lands on this spot.
+     *
+     * @param player The player who landed on this spot.
+     */
+    @Override
+    public void onABoardSpot(Player player) {
+        System.out.println(player.getName() + " landed on " + getName());
+        
+        switch (actionType) {
+            case GO:
+                System.out.println("Collect $200 salary as you pass.");
+                break;
+            case CHANCE:
+                System.out.println("Draw a Chance card.");
+                break;
+            case COMMUNITY_CHEST:
+                System.out.println("Draw a Community Chest card.");
+                break;
+            case LUXURY_TAX:
+                System.out.println("Pay luxury tax of $75.");
+                break;
+            case INCOME_TAX:
+                System.out.println("Pay income tax of $200 or 10% of total assets.");
+                break;
+            case JAIL:
+                System.out.println("Just visiting.");
+                break;
+            case FREE_PARKING:
+                System.out.println("Relax a bit! Nothing happens.");
+                break;
+            case GO_TO_JAIL:
+                sendToJail(player);
+                break;
+            default:
+                System.out.println("Action not defined for this spot.");
+                break;
+        }
+    }
+
+    /**
+     * Sends the given player to jail.
+     *
+     * @param player The player to send to jail.
+     */
+    private void sendToJail(Player player) {
+        player.setInJail(true);
+        player.setJailTurns(3); 
+        player.setPosition(10); 
+        System.out.println(player.getName() + " has been sent to jail.");
+    }
+
+    /**
+     * Defines the various types of action spots available on the board.
      */
     public enum ActionType {
-        GO, CHANCE, COMMUNITY_CHEST, INCOME_TAX, JAIL, FREE_PARKING, GO_TO_JAIL, LUXURY_TAX, 
-        PROPERTY, RAILROAD, UTILITY
-        // add other types as needed
+        GO, CHANCE, COMMUNITY_CHEST, INCOME_TAX, JAIL, 
+        FREE_PARKING, GO_TO_JAIL, LUXURY_TAX, PROPERTY, 
+        RAILROAD, UTILITY 
     }
-    
-    
-    
-    
-
 }
