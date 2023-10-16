@@ -36,7 +36,7 @@ public class Player {
      * @return The combined result of the two dice rolls.
      */
     public int rollDice() {
-        int dice1 = random.nextInt(6) + 1; // Simulates the roll of the first die
+    	int dice1 = random.nextInt(6) + 1; // Simulates the roll of the first die
         int dice2 = random.nextInt(6) + 1; // Simulates the roll of the second die
         return dice1 + dice2; // Returns the sum of the two dice rolls
     }
@@ -187,5 +187,4 @@ public class Player {
 	        this.hasGetOutOfJailFreeCard = false;
 	        // Logic to get out of jail
 	    }
-	}
 }
