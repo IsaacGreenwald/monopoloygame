@@ -17,7 +17,7 @@ public class MonopolyGame {
         MonopolyPiece chosenPiece = getChosenPiece(scanner);
 
         Player player = new Player(playerName + " (" + chosenPiece.getPieceName() + ")");
-        Board board = new Board();
+        Board board = new Board(null);
 
         boolean gameOver = false;
 
