@@ -41,7 +41,7 @@ public class Player {
         return dice1 + dice2; // Returns the sum of the two dice rolls
     }
 
-	
+
     /**
      * Moves the player around the board based on the result of a dice roll.
      * This method wraps around the board if the player's movement exceeds its size.
@@ -103,6 +103,7 @@ public class Player {
 
         return roll; // Return the roll value or 0 when in jail
     }
+
 
 
     // Method to check if the player is in jail
