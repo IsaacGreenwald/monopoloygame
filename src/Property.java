@@ -154,7 +154,7 @@ public class Property implements Spot {
 	 * @param options Varargs of ButtonType options for the dialog.
 	 * @return The ButtonType choice selected by the user
 	 */
-	private ButtonType promptUser(String message, ButtonType... options) {
+	protected ButtonType promptUser(String message, ButtonType... options) {
 		Dialog<ButtonType> dialog = new Dialog<>();
 		dialog.initOwner(primaryStage);
 		dialog.setTitle("Property Purchase");
@@ -177,6 +177,14 @@ public class Property implements Spot {
 
 	public int getMortgageValue() {
 		return mortgageValue;
+	}
+	
+	public Player getOwner() {
+		return owner;
+	}
+
+	public void setOwner(Player owner) {
+		this.owner = owner;
 	}
 
 }
