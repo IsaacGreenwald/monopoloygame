@@ -13,7 +13,7 @@ public class Player {
     private ArrayList<Property> cards;
     private int consecutiveDoubles = 0;
     private Random random;
-
+    private boolean hasGetOutOfJailFreeCard = false;
 
     /**
      * Constructs a new player with the given name and initializes starting money and position.
@@ -27,6 +27,7 @@ public class Player {
         this.setPosition(0);
         this.inJail = false; // Initialize the inJail flag
         this.jailTurns = 0; // Initialize jailTurns
+        this.random = new Random();
     }
 
     /**
@@ -35,8 +36,8 @@ public class Player {
      * @return The combined result of the two dice rolls.
      */
     public int rollDice() {
-        int dice1 = random.nextInt(7); // Simulates the roll of the first die
-        int dice2 = random.nextInt(7); // Simulates the roll of the second die
+        int dice1 = random.nextInt(6) + 1; // Simulates the roll of the first die
+        int dice2 = random.nextInt(6) + 1; // Simulates the roll of the second die
         return dice1 + dice2; // Returns the sum of the two dice rolls
     }
 
@@ -49,24 +50,30 @@ public class Player {
      * @return The total value of the dice roll which determined the move.
      */
     public int move(Board board) {
+        int roll = 0;
+
         if (inJail) {
-            // Player is in jail
-            if (jailTurns > 0) {
+            if (hasGetOutOfJailFreeCard()) {
+                System.out.println("Do you want to use your 'get out of jail free' card?");
+                useGetOutOfJailFreeCard();
+                inJail = false; // Assuming they use the card immediately
+            } else if (jailTurns > 0) {
                 jailTurns--;
                 return 0; // Player doesn't move on this turn
             } else {
                 // Player's jail time is up, let them continue from jail position
                 inJail = false;
             }
-        } else {
-            // Handle normal movement
-            int roll = rollDice();
+        }
+
+        if (!inJail) { // If the player is not in jail, then handle the movement
+            roll = rollDice();
             int oldPosition = getPosition();
             setPosition((getPosition() + roll) % Board.getSize());
             Spot currentSpot = board.getSpot(getPosition());
 
             // Check if the player passes Go and award them money: $200
-            if (getPosition() < oldPosition && inJail == false) {                
+            if (getPosition() < oldPosition) {                
                 setMoney(getMoney() + 200);
                 System.out.println(getName() + " passed 'Go' and collected $200!");
             }
@@ -82,7 +89,7 @@ public class Player {
                     return 0; // Player doesn't move further in this turn
                 } else {
                     // Player rolled doubles take another turn
-                    System.out.println(getName() + " rolled doubles!!! Ha Roll again.");
+                    System.out.println(getName() + " rolled doubles! Roll again.");
                     return roll; // Return the dice roll value for the current turn
                 }
             } else {
@@ -91,10 +98,9 @@ public class Player {
             }
 
             currentSpot.onABoardSpot(this);
-            return roll; // Return the dice roll value for normal movement
         }
 
-        return 0; // Return 0 when in jail
+        return roll; // Return the roll value or 0 when in jail
     }
 
 
@@ -168,4 +174,18 @@ public class Player {
 		return this.cards;
 	}
 	
+	public void giveGetOutOfJailFreeCard() {
+	    this.hasGetOutOfJailFreeCard = true;
+	}
+	
+	public boolean hasGetOutOfJailFreeCard() {
+	    return this.hasGetOutOfJailFreeCard;
+	}
+	
+	public void useGetOutOfJailFreeCard() {
+	    if (this.hasGetOutOfJailFreeCard) {
+	        this.hasGetOutOfJailFreeCard = false;
+	        // Logic to get out of jail
+	    }
+	}
 }
