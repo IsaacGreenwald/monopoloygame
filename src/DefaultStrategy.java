@@ -13,7 +13,7 @@ public class DefaultStrategy implements Strategy{
 
 	
 	@Override
-	public void buyProperty(Property property, ComputerPlayer computerPlayer) {
+	public void chooseBuyProperty(Property property, ComputerPlayer computerPlayer) {
 		int willingToPay = computerPlayer.getMoney() - 100;
 		if(willingToPay > property.getPrice()) {
 			int newBalance = computerPlayer.getMoney() - property.getPrice();

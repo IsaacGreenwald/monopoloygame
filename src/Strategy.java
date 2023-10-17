@@ -10,7 +10,7 @@ public interface Strategy {
 	 * @param property landed on
 	 * @param computer player who just rolled
 	 */
-	public void buyProperty(Property property, ComputerPlayer computerPlayer);
+	public void chooseBuyProperty(Property property, ComputerPlayer computerPlayer);
 	
 	/**
 	 * decides when the computer player will mortgage or unmortgage properties
