@@ -13,6 +13,7 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -185,6 +186,24 @@ public class MonopolyApp extends Application {
         Player currentPlayer = players.get(currentPlayerIndex);
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
         return currentPlayer;
+    }
+    
+    /**
+     * prompt the user for the number of computer players they wish to play
+     * against and return that value
+     * 
+     */
+    private int numberComputerPlayers() {
+    	return 0;
+    }
+    
+    /**
+     * prompt the user for strategies and monopoly pieces for each computer player
+     * computer players are then added to an arraylist for computer player turns
+     * return that array list
+     */
+    private ArrayList<ComputerPlayer> getComputerPlayers(){
+    	return null;
     }
 
     /**

@@ -24,6 +24,7 @@ public class Property implements Spot {
 		this.setPrice(price);
 		this.mortgageValue = mortgageValue;
 		this.primaryStage = primaryStage;
+		this.owner = null;
 
 	}
 
@@ -164,7 +165,17 @@ public class Property implements Spot {
 		return result.orElse(ButtonType.NO);
 	}
 
-
+	@Override
+	public boolean equals(Object o) {
+		if(o==this) {
+			return true;
+		}
+		if(!(o instanceof Property)) {
+			return false;
+		}
+		Property property = (Property)o;
+		return false; //finish later for tests
+	}
 
 
 	public int getPrice() {
@@ -177,6 +188,10 @@ public class Property implements Spot {
 
 	public int getMortgageValue() {
 		return mortgageValue;
+	}
+	
+	public void setOwner(Player player) {
+		this.owner = player;
 	}
 
 }
