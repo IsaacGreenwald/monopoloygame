@@ -191,17 +191,12 @@ public class Property implements Spot {
 		return mortgageValue;
 	}
 	
-<<<<<<< HEAD
 	public Player getOwner() {
 		return owner;
 	}
 
-	public void setOwner(Player owner) {
-		this.owner = owner;
-=======
 	public void setOwner(Player player) {
 		this.owner = player;
->>>>>>> refs/remotes/origin/main
 	}
 
 }
