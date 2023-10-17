@@ -3,6 +3,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class GameTest {
+	
     public static void main(String[] args) throws SQLException {
         // Establish a database connection
         Connection conn = null;

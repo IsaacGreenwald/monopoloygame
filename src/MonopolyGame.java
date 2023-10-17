@@ -115,7 +115,6 @@ public class MonopolyGame {
 		String playerName = getPlayerName(scanner1);
 		MonopolyPiece chosenPiece = getChosenPiece(scanner1);
 
-
 		Player player = new Player(playerName + " (" + chosenPiece.getPieceName() + ")");
 		player.setMoney(1500);
 		Board board = new Board(null);
@@ -176,8 +175,11 @@ public class MonopolyGame {
 			}
 			else if(turn == 1) {
 				for(int i = 0; i < numPlayers; i++) {
-					
+					System.out.println("Computer player " + i + "is now rolling");
+					int computerRoll = computerPlayers.get(i).move(board);
+					System.out.println("They rolled a total of" + computerRoll);
 				}
+				turn = 0;
 			}
 		}
 
