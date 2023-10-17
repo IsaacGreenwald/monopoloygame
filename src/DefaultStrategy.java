@@ -29,14 +29,26 @@ public class DefaultStrategy implements Strategy{
 	@Override
 	public void mortgageProperty(ComputerPlayer computerPlayer) {
 		Property toMortgage;
-		if(computerPlayer.getCards().size() == 0) {
-			
+		ArrayList<Property> owned = computerPlayer.getCards();
+		if(computerPlayer.getCards().size() == 1) {
+			toMortgage = owned.get(0);
+			toMortgage.mortgage();
+		}
+		else if(owned.size() > 1) {
+			toMortgage = owned.get(0);
+			for(int i = 1; i < owned.size(); i++) {
+				if(owned.get(i).getPrice() < toMortgage.getPrice()) { // if property in list costs less than selected property
+																	  // select that property instead
+					toMortgage = owned.get(i);
+				}
+			}
+			toMortgage.mortgage();
 		}
 	}
 
 	@Override
 	public void bid(Property property, ComputerPlayer computerPlayer) {
-		
+		//
 	}
 
 	
