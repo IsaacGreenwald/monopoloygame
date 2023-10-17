@@ -32,6 +32,10 @@ public class ComputerPlayer extends Player{
 		
 	}
 	
+	/**
+	 * 
+	 * @return properties owned by computer player
+	 */
 	public ArrayList<Property> getCards() {
 		return this.cards;
 	}
