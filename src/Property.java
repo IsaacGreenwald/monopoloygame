@@ -165,7 +165,17 @@ public class Property implements Spot {
 		return result.orElse(ButtonType.NO);
 	}
 
-
+	@Override
+	public boolean equals(Object o) {
+		if(o==this) {
+			return true;
+		}
+		if(!(o instanceof Property)) {
+			return false;
+		}
+		Property property = (Property)o;
+		return false; //finish later for tests
+	}
 
 
 	public int getPrice() {
