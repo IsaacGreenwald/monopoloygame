@@ -25,10 +25,12 @@ public class ChanceCard {
 	private Player player;
     private List<Runnable> cards = new ArrayList<>();
     private Random random;
+	 private MonopolyGame monopolyGame;
 	
 	public ChanceCard(Player player) {
         this.player = player;
-        this.random = new Random();	 
+        this.random = new Random();	
+        this.monopolyGame = monopolyGame;
         
         // Add all methods to the list
         cards.add(this::advanceToBoardWalk);
@@ -41,7 +43,7 @@ public class ChanceCard {
         cards.add(this::getOutOfJailFree);
         cards.add(this::goBackThreeSpaces);
         cards.add(this::goToJail);
-        cards.add(this::makeGeneralRepairs);
+        // cards.add(this::makeGeneralRepairs);
         cards.add(this::speedingFine);
         cards.add(this::tripToReadingRailroad);
         cards.add(this::electedChairman);
@@ -67,14 +69,20 @@ public class ChanceCard {
 	
     public void advanceToIllinoisAvenue() {
     	DialogUtils.showAlert("Advance to Illinois Avenue. If you pass Go, collect $200");
+        int previousLocation = player.getPosition();
         player.setPosition(24);
-        // if they pass go collect 200
+        if(previousLocation >= 25) {
+    		player.setMoney(player.getMoney() + 200);
+        }
     }
 
     public void advanceToStCharlesPlace() {
     	DialogUtils.showAlert("Advance to St. Charles Place. If you pass Go, collect $200");
+        int previousLocation = player.getPosition();
         player.setPosition(11);
-        // if they pass go collect 200
+        if(previousLocation >= 12) {
+    		player.setMoney(player.getMoney() + 200);
+        }    
     }
 
     public void advanceToNearestRailroad() {
@@ -97,7 +105,7 @@ public class ChanceCard {
     }
 
     public void advanceToNearestUtility() {
-        System.out.println("Advance token to nearest Utility...");
+    	DialogUtils.showAlert("Advance token to nearest Utility...");
         int position = player.getPosition();
 
         if (position < 12 || position >= 28) {
@@ -131,10 +139,10 @@ public class ChanceCard {
         player.setPosition(10);
     }
 
-    public void makeGeneralRepairs() {
-    	DialogUtils.showAlert("Make general repairs on all your property...");
+    // public void makeGeneralRepairs() {
+        // System.out.println("Make general repairs on all your property...");
         // Not sure about this yet
-    }
+    // }
 
     public void speedingFine() {
     	DialogUtils.showAlert("Speeding fine $15");
@@ -142,13 +150,32 @@ public class ChanceCard {
     }
 
     public void tripToReadingRailroad() {
-    	DialogUtils.showAlert("Take a trip to Reading Railroad. If you pass Go, collect $200");
+        System.out.println("Take a trip to Reading Railroad. If you pass Go, collect $200");
+        int previousLocation = player.getPosition();
         player.setPosition(5);
+        if(previousLocation >= 6) {
+    		player.setMoney(player.getMoney() + 200);
+        }
     }
 
     public void electedChairman() {
-    	DialogUtils.showAlert("You have been elected Chairman of the Board. Pay each player $50");
+        System.out.println("You have been elected Chairman of the Board. Pay each player $50");
+        
+        // Get the list of computer players
+        ArrayList<ComputerPlayer> cpList = monopolyGame.getComputerPlayerList();
+
+        // Total amount to be deducted from main player
+        int totalPaid = cpList.size() * 50;
+
+        // Pay each computer player $50
+        for (ComputerPlayer cp : cpList) {
+            cp.setMoney(cp.getMoney() + 50);
+        }
+        
+        // Deduct the total paid amount from the main player
+        player.setMoney(player.getMoney() - totalPaid); 
     }
+
 
     public void buildingLoanMatures() {
     	DialogUtils.showAlert("Your building loan matures. Collect $150");
@@ -156,4 +183,3 @@ public class ChanceCard {
     }
 	
 }
-

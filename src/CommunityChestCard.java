@@ -100,8 +100,23 @@ public class CommunityChestCard {
 	    }
 
 	    public void itsYourBirthday() {
-	    	DialogUtils.showAlert("It is your birthday. Collect $10 from every player");
-	        // Not sure about this yet
+		        DialogUtils.showAlert("It is your birthday. Collect $10 from every player.");
+		        
+		        // Get the number of computer players
+		        int numPlayers = monopolyGame.getNumPlayers();
+
+		        // Calculate the total money to be collected
+		        int totalCollected = numPlayers * 10;
+
+		        // Deduct $10 from each computer player
+		        ArrayList<ComputerPlayer> cpList = monopolyGame.getComputerPlayerList();
+		        for (ComputerPlayer cp : cpList) {
+		            cp.setMoney(cp.getMoney() - 10);
+		        }
+		        
+		        // Add the total collected money to the main player
+		        player.setMoney(player.getMoney() + totalCollected); 
+		    }
 	    }
 
 	    public void lifeInsuranceMatures() {
