@@ -85,7 +85,7 @@ public class GameDatabaseOperations {
                 
                 System.out.println("Money retrieved: " + money); // Print the money amount
                 // Create a Player object using the retrieved data
-                player = new Player(name, null, money);
+                player = new Player(name);
                 player.setMoney(money);                //player.setMoney(money);
             }
         } catch (SQLException e) {
@@ -136,7 +136,7 @@ public class GameDatabaseOperations {
                 int position = resultSet.getInt("position");
                 
                 // Create a Player object with the retrieved data
-                player = new Player(name, null, position);
+                player = new Player(name);
                 player.setMoney(money);
                 // add position and stuff later
             }

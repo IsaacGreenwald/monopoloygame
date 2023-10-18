@@ -77,7 +77,6 @@ public class MonopolyApp extends Application {
 	        // For computer players, use the configurations
 	        int configuration = playerConfigurations[i]; // Offset by 1 because the first player is human
 	        if (configuration < 1 || configuration > 3) {
-	            // Handle invalid configuration
 	            System.err.println("Invalid configuration for player " + name);
 	        } else {
 	            ComputerPlayer player = ComputerPlayerFactory.createComputerPlayer(name, piece, configuration);
@@ -217,8 +216,7 @@ public class MonopolyApp extends Application {
 	private Connection initializeDatabaseConnection() {
 		Connection connection = null;
 		try {
-			// Initialize your database connection here
-			connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/MonopolyGame", "root", "root");
+			connection = DriverManager.getConnection("jdbc:mysql://localhost:8889/MonopolyGame", "root", "root");
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.err.println("Error while connecting to the database: " + e.getMessage());
@@ -234,7 +232,6 @@ public class MonopolyApp extends Application {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		// Call the save game method from your database operations class
 		try {
 			dbOps.updatePlayerMoney(currentPlayer.getName(), currentPlayer.getMoney());
 			System.out.println("Player's money updated successfully!");
@@ -477,7 +474,13 @@ private Point2D getGridStartingCoordinates(int playerIndex) {
 
 
 
-
+/**
+ * Populates a container with player information, including their name, associated MonopolyPiece,
+ * money amount, and visual styling.
+ *
+ * @param players   The list of Player objects containing player information to be displayed.
+ * @param container The VBox container where player information panels will be added.
+ */
 public void populatePlayerInfo(List<Player> players, VBox container) {
     container.getChildren().clear();
 
@@ -522,7 +525,7 @@ public void populatePlayerInfo(List<Player> players, VBox container) {
         idx++;
     }
 
-    container.setPadding(new Insets(10, 10, 10, 65));
+    container.setPadding(new Insets(10, 10, 10, 90));
     container.setSpacing(10);
 }
 
@@ -650,16 +653,28 @@ private void mortgageOrUnmortgageProperty(Pane root, String propertyName) {
     }
 }
 
+/**
+ * Displays an informational alert dialog with the specified message.
+ *
+ * @param message The message to be displayed in the alert.
+ */
 private void showAlert(String message) {
-	Alert alert = new Alert(Alert.AlertType.INFORMATION);
-	alert.initOwner(primaryStage); 
-	alert.setTitle("Monopoly Game Info");
-	alert.setHeaderText(null);
-	alert.setContentText(message);
-	alert.showAndWait();
+    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    alert.initOwner(primaryStage);
+    alert.setTitle("Monopoly Game Info");
+    alert.setHeaderText(null);
+    alert.setContentText(message);
+    alert.showAndWait();
 }
 
 
+
+/**
+ * Refreshes the items in a ComboBox with property names that are owned by the current player
+ * and are not mortgaged.
+ *
+ * @param propertyDropdown The ComboBox to be refreshed with property names.
+ */
 private void refreshPropertyDropdown(ComboBox<String> propertyDropdown) {
     Player currentPlayer = getCurrentPlayer();
     List<Property> properties = currentPlayer.getProperties();
@@ -672,5 +687,6 @@ private void refreshPropertyDropdown(ComboBox<String> propertyDropdown) {
     propertyDropdown.getItems().clear();
     propertyDropdown.getItems().addAll(propertyNames);
 }
+
 
 }

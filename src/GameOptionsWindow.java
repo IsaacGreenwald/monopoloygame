@@ -34,23 +34,21 @@ public class GameOptionsWindow extends Application {
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Game Options");
 
-        // Makes dropdown menu with numbers 1 to 7, use for number of bot players
+       
         ComboBox<Integer> numberDropdown = new ComboBox<>();
         for (int i = 1; i <= 3; i++) {
             numberDropdown.getItems().add(i);
         }
-        numberDropdown.setValue(1); // Default selection
+        numberDropdown.setValue(1); 
 
         // Start Game button
         Button startGameButton = new Button("Start Game");
-        startGameButton.setDisable(true); // Initially disable the button
+        startGameButton.setDisable(true); 
 
-        // Window layout
         VBox layout = new VBox(10);
         layout.getChildren().addAll(numberDropdown);
 
         ObservableList<ComboBox<Integer>> playerDropdowns = FXCollections.observableArrayList();
-        // A list to hold the name text fields and piece selection dropdowns for players
         ObservableList<TextField> playerNameFields = FXCollections.observableArrayList();
         ObservableList<ComboBox<MonopolyPiece>> pieceDropdowns = FXCollections.observableArrayList();
 
@@ -63,26 +61,20 @@ public class GameOptionsWindow extends Application {
             pieceDropdowns.clear();
 
             for (int i = 1; i <= selectedNumber; i++) {
-                VBox playerBox = new VBox(10); // Create a VBox to hold player information
-                playerBox.setStyle("-fx-background-color: white; -fx-padding: 10;"); // Set a white background with padding
+                VBox playerBox = new VBox(10); 
+                playerBox.setStyle("-fx-background-color: white; -fx-padding: 10;"); 
                 Label playerNameLabel = new Label("Player " + i + " Name:");
                 TextField playerNameField = new TextField();
 
                 Label pieceLabel = new Label("Choose piece:");
-                ComboBox<MonopolyPiece> pieceDropdown = new ComboBox<>(); // <-- This is the dropdown for the current loop iteration
-
-                // Directly add MonopolyPiece values to the dropdown
+                ComboBox<MonopolyPiece> pieceDropdown = new ComboBox<>(); 
                 pieceDropdown.getItems().addAll(MonopolyPiece.values());
 
-                // Set a default value for the ComboBox.
                 pieceDropdown.setValue(MonopolyPiece.CAR);
 
-                // Add an event listener to handle piece selection. Now, you directly get the MonopolyPiece enum value.
                 pieceDropdown.setOnAction(event -> {
                     MonopolyPiece selectedPiece = pieceDropdown.getValue();
                     if (selectedPiece != null) {
-                        // No need for conversion. You have the actual enum value.
-                        // Use selectedPiece directly.
                     }
                 });
 
@@ -111,11 +103,9 @@ public class GameOptionsWindow extends Application {
             String[] playerNames = new String[selectedNumber + 1];     // +1 for the main player
             MonopolyPiece[] playerPieces = new MonopolyPiece[selectedNumber + 1];    // +1 for the main player
 
-            // Add the main player's details to the start of the arrays
             playerNames[0] = this.mainPlayerName;
             playerPieces[0] = this.mainPlayerPiece;
-            // Here you can set a default or special configuration value for the main player if needed.
-            playerConfigurations[0] = 0; // for instance
+            playerConfigurations[0] = 0; 
 
             for (int i = 1; i <= selectedNumber; i++) {
                 if (i-1 < playerDropdowns.size() && i-1 < playerNameFields.size() && i-1 < pieceDropdowns.size()) {
@@ -144,7 +134,7 @@ public class GameOptionsWindow extends Application {
             BackgroundRepeat.NO_REPEAT,
             BackgroundRepeat.NO_REPEAT,
             BackgroundPosition.DEFAULT,
-            new BackgroundSize(1.0, 1.0, true, true, false, false) // make window adjustable
+            new BackgroundSize(1.0, 1.0, true, true, false, false) 
         );
         layout.setBackground(new Background(background));
        

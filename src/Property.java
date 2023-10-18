@@ -80,21 +80,40 @@ public class Property implements Spot {
 	    return playerDecision;
 	}
 
-private boolean humanPlayerBuyProperty(Player player) {
-    ButtonType result = DialogUtils.promptUser("Does " + player.getName() + " want to purchase " + this.name + " for $" + this.price + "?",
-            ButtonType.YES, ButtonType.NO);
-    boolean wantsToBuy = (result == ButtonType.YES);
-    return proceedWithPurchase(player, wantsToBuy);
-}
+	/**
+	 * Handles the purchase of a property by a human player.
+	 *
+	 * @param player The human player attempting to make the purchase.
+	 * @return true if the player proceeds with the purchase
+	 */
+	private boolean humanPlayerBuyProperty(Player player) {
+	    ButtonType result = DialogUtils.promptUser("Does " + player.getName() + " want to purchase " + this.name + " for $" + this.price + "?",
+	            ButtonType.YES, ButtonType.NO);
+	    boolean wantsToBuy = (result == ButtonType.YES);
+	    return proceedWithPurchase(player, wantsToBuy);
+	}
 
 
-private boolean computerPlayerBuyProperty(ComputerPlayer player) {
-    Strategy strategy = player.getStrategy();
-    boolean wantsToBuy = strategy.chooseBuyProperty(this, player); 
-    return proceedWithPurchase(player, wantsToBuy);
-}
+	/**
+	 * Handles the purchase of a property by a computer player based on their strategy.
+	 *
+	 * @param player The computer player attempting to make the purchase.
+	 * @return true if the player proceeds with the purchase as per their strategy
+	 */
+	private boolean computerPlayerBuyProperty(ComputerPlayer player) {
+	    Strategy strategy = player.getStrategy();
+	    boolean wantsToBuy = strategy.chooseBuyProperty(this, player); 
+	    return proceedWithPurchase(player, wantsToBuy);
+	}
 
 
+	/**
+	 * Proceeds with the purchase of a property by a player if conditions are met.
+	 *
+	 * @param player The player attempting to make the purchase.
+	 * @param wantsToBuy true if the player wants to buy the property
+	 * @return true if the purchase is successful
+	 */
 private boolean proceedWithPurchase(Player player, boolean wantsToBuy) {
     if (this.price > player.getMoney()) {
         DialogUtils.showAlert(player.getName() + " do not have enough money to purchase this property.");

@@ -42,7 +42,7 @@ public class MonopolyGame {
 		}
 	}
 	private Player loadSavedGame(Scanner scanner) throws SQLException {
-		Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/MonopolyGame", "root", "root");
+		Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:8889/MonopolyGame", "root", "root");
 
 		// Load the game state from the database
 		GameDatabaseOperations dbOps = new GameDatabaseOperations(conn);

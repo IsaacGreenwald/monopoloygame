@@ -34,23 +34,39 @@ public class ComputerPlayer extends Player {
     }
 
     /**
-     * @return Properties owned by computer player
+     * Gets the list of properties owned by the computer player.
+     *
+     * @return An ArrayList of Property objects representing the properties owned.
      */
     public ArrayList<Property> getCards() {
         return this.cards;
     }
 
+    /**
+     * Allows the computer player to make a decision about buying a property.
+     *
+     * @param property The Property object representing the property being considered for purchase.
+     */
     public void chooseBuyProperty(Property property) {
         strategy.chooseBuyProperty(property, this);
     }
 
+    /**
+     * Adds a property to the list of properties owned by the computer player.
+     *
+     * @param property The Property object to be added.
+     */
     public void addProperty(Property property) {
         cards.add(property);
     }
 
+    /**
+     * Delegates the mortgage decision to a strategy.
+     */
     public void mortgage() {
         strategy.mortgageProperty(this);
     }
+
 
     public int getConfiguration() {
         return configuration;
