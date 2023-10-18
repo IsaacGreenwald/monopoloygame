@@ -24,6 +24,6 @@ public class GameTest {
         Board board = new Board(null); // Initialize the board
         
         // Start the Monopoly game
-        game.EntryMenu(board);
+        game.entryMenu(board);
     }
 }
