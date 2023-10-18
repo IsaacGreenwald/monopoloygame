@@ -12,4 +12,6 @@ https://www.youtube.com/watch?v=nz8P528uGjk
 
 Make sure resources is used as a source folder. 
 
+Make sure to change port number if needed.
+
 Please play in maximized window. 
