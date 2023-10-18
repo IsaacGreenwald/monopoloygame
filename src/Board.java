@@ -10,6 +10,7 @@ public class Board {
     public Board(Stage primaryStage) {
         this.primaryStage = primaryStage;
         initializeSpots();
+
     }
 
     /**
@@ -28,7 +29,7 @@ public class Board {
     	spots[9] = new Property("Connecticut Avenue", 120, 8, 60, primaryStage);
     	spots[10] = new ActionSpot("Jail / Just Visiting", ActionSpot.ActionType.JAIL);
     	spots[11] = new Property("St. Charles Place", 140, 10, 70, primaryStage);
-    	spots[12] = new Property("Electric Company", 150, 0, 75, primaryStage); // rent is 4x dice roll - implement later
+    	spots[12] = new Property("Electric Company", 150, 20, 75, primaryStage); 
     	spots[13] = new Property("States Avenue", 140, 10, 70, primaryStage);
     	spots[14] = new Property("Virginia Avenue", 160, 12, 80, primaryStage);
     	spots[15] = new Property("Pennsylvania Railroad", 200, 25, 100, primaryStage);
@@ -44,7 +45,7 @@ public class Board {
     	spots[25] = new Property("B. & O. Railroad", 200, 25, 100, primaryStage);
     	spots[26] = new Property("Atlantic Avenue", 260, 22, 130, primaryStage);
     	spots[27] = new Property("Ventnor Avenue", 260, 22, 130, primaryStage);
-    	spots[28] = new Property("Water Works", 150, 0, 75, primaryStage); // rent is 4x dice roll - implement later
+    	spots[28] = new Property("Water Works", 150, 20, 75, primaryStage);
     	spots[29] = new Property("Marvin Gardens", 280, 24, 140, primaryStage);
     	spots[30] = new ActionSpot("Go To Jail", ActionSpot.ActionType.GO_TO_JAIL);
     	spots[31] = new Property("Pacific Avenue", 300, 26, 150, primaryStage);

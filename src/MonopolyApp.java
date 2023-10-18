@@ -4,6 +4,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -12,8 +13,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Pair;
+
 import javafx.scene.control.Button;
 
 import java.sql.Connection;
@@ -22,6 +25,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Scanner;
 
 /**
  * This is the main UI class for our monopoly game and it utilizes javaFX
@@ -67,6 +71,7 @@ public class MonopolyApp extends Application {
 
     // Create an instance of GameDatabaseOperations and pass the connection
     dbOps = new GameDatabaseOperations(dbConnection);
+
     this.primaryStage = primaryStage;
     board = new Board(primaryStage);
     Image boardImage = new Image(getClass().getClassLoader().getResource("background1.jpg").toExternalForm());
@@ -121,8 +126,11 @@ public class MonopolyApp extends Application {
     saveButton.setOnAction(event -> onSaveButtonPressed());
     saveButton.getStyleClass().add("custom-button");
 
-    Button rollDiceButton = new Button("Roll Dice");
-    rollDiceButton.setPrefWidth(100);
+
+
+   
+    Button rollDiceButton = new Button("ROLL DICE");
+    rollDiceButton.setPrefWidth(250);
     rollDiceButton.setPrefHeight(40);
     rollDiceButton.setOnAction(event -> onDiceRollButtonPressed(root));
     rollDiceButton.getStyleClass().add("custom-button");
@@ -131,6 +139,19 @@ public class MonopolyApp extends Application {
     buttonBox.setLayoutX(10.0);
     buttonBox.setLayoutY(10.0);
     root.getChildren().add(buttonBox);
+    
+
+    
+    Button MortgageButton = new Button("MORTGAGE PROPERTIES");
+    MortgageButton.setPrefWidth(300);
+    MortgageButton.setPrefHeight(40);
+    MortgageButton.setOnAction(event -> mortgageOrUnmortgageProperty(root));
+    MortgageButton.getStyleClass().add("custom-button");
+    HBox buttonForMortgage = new HBox(10);
+    buttonForMortgage.getChildren().add(MortgageButton);
+    buttonForMortgage.setLayoutX(600.0);
+    buttonForMortgage.setLayoutY(10.0);
+    root.getChildren().add(buttonForMortgage);
     
     setupPlayerInfoPanel();
     initializePlayersOnBoard();
@@ -175,7 +196,11 @@ public class MonopolyApp extends Application {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    primaryStage.setFullScreen(true);
+
+    primaryStage.show();
     }
+
 
     /**
      * Rolls dice for the current player and moves their piece 
@@ -204,28 +229,34 @@ public class MonopolyApp extends Application {
         }
         anchorPane.getChildren().addAll(diceImageViews);
 
-        return diceResults; // Return the dice results directly
+        return diceResults; 
     }
 
 
     
     public void onDiceRollButtonPressed(AnchorPane anchorPane) {
         Player currentPlayer = getCurrentPlayer();
-        
-        // Roll the dice and get the result
+
+
+
         int[] diceResults = rollDice(anchorPane);
         int dice1 = diceResults[0];
         int dice2 = diceResults[1];
-        
-        // Apply the move logic using the dice result
+
         currentPlayer.move(board, dice1, dice2);
-        
-        // Since move() already updates the player's position, we don't need the additional logic
-        // to update the position again here. Just remove the token and reposition the player.
+
+        if (currentPlayer.isInJail() && currentPlayer.getJailTurns() > 0) {
+            positionPlayerOnBoard(currentPlayer, currentPlayer.getPosition());
+
+            nextPlayer();
+            return;
+        }     
+
         removeTokenFromBoard(currentPlayer);
         positionPlayerOnBoard(currentPlayer, currentPlayer.getPosition());
 
         Spot landedSpot = board.getSpot(currentPlayer.getPosition());
+
         if(landedSpot == null) {
             System.out.println("Error: Spot not found at position " + currentPlayer.getPosition());
             return;
@@ -234,6 +265,25 @@ public class MonopolyApp extends Application {
         if (landedSpot instanceof Property) {
             showSpotInfo(currentPlayer, currentPlayer.getPosition()); 
         }
+            positionPlayerOnBoard(currentPlayer, currentPlayer.getPosition());
+
+        }
+        
+        if (landedSpot instanceof ActionSpot) {
+        	showSpotInfo(currentPlayer, currentPlayer.getPosition()); 
+            positionPlayerOnBoard(currentPlayer, currentPlayer.getPosition());
+
+        }
+        
+        if (dice1 == dice2) {
+            if (currentPlayer.getConsecutiveDoubles() == 3) {
+                showAlert(currentPlayer.getName() + " rolled doubles three times in a row and is now in jail!");
+                positionPlayerOnBoard(currentPlayer, currentPlayer.getPosition());
+            } else {
+                return; 
+            }
+        }
+
         
         nextPlayer();
     }
@@ -377,23 +427,42 @@ public class MonopolyApp extends Application {
      * @param container - The VBox container where the player information will be added.
      */
     public void populatePlayerInfo(List<Player> players, VBox container) {
-        container.getChildren().clear();  
+        container.getChildren().clear();
 
+        int idx = 0;
         for(Player player : players) {
-        	Label playerName = new Label(player.getName() + " (" + player.getPiece().name() + ")");
-            playerName.setStyle("-fx-font-weight: bold; -fx-font-size: 24px;");
+            Label playerName = new Label(player.getName() + " (" + player.getPiece().name() + ")");
+            playerName.setStyle("-fx-font-weight: bold; -fx-font-size: 24px; -fx-text-fill: #333;");
 
             Label playerAmount = new Label("Amount: $" + player.getMoney());
             playerAmount.setId(player.getName() + "_money");
-            playerAmount.setStyle("-fx-font-size: 20px;");
+            playerAmount.setStyle("-fx-font-size: 20px; -fx-text-fill: #555;");
 
-            VBox playerPanel = new VBox(5, playerName, playerAmount);
-            playerPanel.setSpacing(5);
-            playerPanel.setPadding(new Insets(5, 0, 5, -50)); 
-            
-            container.getChildren().add(playerPanel); 
+            VBox playerPanel = new VBox(10, playerName, playerAmount); // increased spacing
+            playerPanel.setPadding(new Insets(10, 10, 10, 10));
+
+            // Add alternating background colors
+            if (idx % 2 == 0) {
+                playerPanel.setStyle("-fx-background-color: #f3f3f3; -fx-border-radius: 5; -fx-background-radius: 5;");
+            } else {
+                playerPanel.setStyle("-fx-background-color: #e9e9e9; -fx-border-radius: 5; -fx-background-radius: 5;");
+            }
+
+            // Add a little drop shadow for a 3D effect
+            DropShadow dropShadow = new DropShadow();
+            dropShadow.setOffsetY(3.0f);
+            dropShadow.setColor(Color.color(0.4f, 0.4f, 0.4f));
+            playerPanel.setEffect(dropShadow);
+
+            container.getChildren().add(playerPanel);
+            idx++;
         }
+
+        // Add overall padding to the main container
+        container.setPadding(new Insets(10, 10, 10, 10));
+        container.setSpacing(10);
     }
+
 
     /**
      * Updates the money display for a given player.
@@ -457,8 +526,9 @@ public class MonopolyApp extends Application {
      * @param spotPosition - the position of the spot.
      */
     private void showSpotInfo(Player currentPlayer, int spotPosition) {
-        Spot landedSpot = board.getSpot(spotPosition);
-        landedSpot.onABoardSpot(currentPlayer); 
+        Spot spot = board.getSpot(spotPosition);
+
+        spot.onABoardSpot(currentPlayer); 
         updatePlayerMoney(currentPlayer);
     }
 
@@ -487,5 +557,31 @@ public class MonopolyApp extends Application {
 
         return new Point2D(column, row);
     }
+    
+    /**
+     * Represents a method to mortgage or unmortgage a property for a player in the Monopoly game.
+     * @param player - represents the main player of the game. 
+     */
+    private void mortgageOrUnmortgageProperty(AnchorPane anchorpane) {
+    	Player currentPlayer = getCurrentPlayer(); 
+    	
+        ArrayList<Property> properties = currentPlayer.getProperties();
+
+        for (int i = 0; i < properties.size(); i++) {
+            Property property = properties.get(i);
+            
+        }
+    }
+    
+	private void showAlert(String message) {
+		Alert alert = new Alert(Alert.AlertType.INFORMATION);
+		alert.initOwner(primaryStage); 
+		alert.setTitle("Monopoly Game Info");
+		alert.setHeaderText(null);
+		alert.setContentText(message);
+		alert.showAndWait();
+	}
+	
+	
     
 }

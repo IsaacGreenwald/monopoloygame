@@ -18,6 +18,7 @@ public class ActionSpot implements Spot {
     public ActionSpot(String name, ActionType actionType) {
         this.name = name;
         this.actionType = actionType;
+        
     }
 
     @Override
@@ -91,9 +92,8 @@ public class ActionSpot implements Spot {
     
     private void sendToJail(Player player) {
         player.setInJail(true);
-        player.setJailTurns(2); // Set the number of jail turns
+        player.setJailTurns(3); // Set the number of jail turns
         player.setPosition(10); // Set the position to the jail spot
-        System.out.println(player.getName() + " goes to jail.");
     }
 
 

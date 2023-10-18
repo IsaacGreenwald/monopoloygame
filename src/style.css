@@ -1,0 +1,17 @@
+/* Define a custom style for the button */
+.custom-button {
+    -fx-background-color: #007ACC; /* Background color */
+    -fx-text-fill: white; /* Text color */
+    -fx-font-size: 18px; /* Increased Font size */
+    -fx-font-family: "Arial"; /* Font family */
+    -fx-font-weight: bold; /* Bold font weight */
+    -fx-padding: 8px 15px; /* Add padding for a larger click area and better appearance */
+    -fx-border-radius: 8px; /* Rounded corners */
+    -fx-background-radius: 8px; /* Rounded corners for background */
+    -fx-effect: dropshadow( three-pass-box, rgba(0,0,0,0.6), 5, 0.0, 0, 1 ); /* Add shadow for a 3D effect */
+}
+
+/* Style for the AnchorPane */
+#anchorPaneId {
+    -fx-background-color: #F5F5DC; /* Use your desired background color */
+}
