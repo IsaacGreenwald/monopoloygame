@@ -57,7 +57,7 @@ public class MonopolyApp extends Application {
 	    for (MonopolyPiece piece : playerPieces) {
 	        System.out.println(piece);
 	    }
-	    if (playerNames.length != playerPieces.length || playerNames.length > 4 || playerConfigurations.length > 3) {
+	    if (playerNames.length != playerPieces.length || playerNames.length > 4 || playerConfigurations.length > 4) {
 	        System.err.println("Invalid input arrays.");
 	        System.out.println(playerNames.length);
 	        return;
@@ -445,7 +445,9 @@ private void setupPlayerInfoPanel() {
 private void initializePlayersOnBoard() {
 	for (int i = 0; i < players.size(); i++) {
 		Player player = players.get(i);
-		ImageView playerToken = new ImageView(new Image(player.getPiece().getIconURL()));
+		String imageUrl = player.getPiece().getIconURL();
+		System.out.println("Attempting to load image from: " + imageUrl);
+		ImageView playerToken = new ImageView(new Image(imageUrl));
 		playerToken.setFitWidth(30);
 		playerToken.setFitHeight(30);
 		playerToken.setUserData(player); 
