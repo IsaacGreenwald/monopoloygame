@@ -10,6 +10,7 @@ import java.util.Scanner;
 public class MonopolyGame {
 	private GameDatabaseOperations dbOps;
 	private static final int DEFAULT = 1;
+	private ArrayList<ComputerPlayer> computerPlayers = new ArrayList<>();
 
 	public MonopolyGame(GameDatabaseOperations dbOps) {
 		this.dbOps = dbOps;
@@ -234,7 +235,7 @@ public class MonopolyGame {
 		return MonopolyPiece.getPiece(pieceChoice);
 	}
 
-	private int getNumPlayers() {
+	protected int getNumPlayers() {
 		Scanner in = new Scanner(System.in);
 		int answer = 0;
 		while(answer < 1 || answer > 3) {
@@ -253,10 +254,10 @@ public class MonopolyGame {
 
 	}
 
-	private ArrayList<ComputerPlayer> getComputerPlayers(int numPlayers){
+	protected ArrayList<ComputerPlayer> getComputerPlayers(int numPlayers){
 		Scanner in = new Scanner(System.in);
 		int answer = 0;
-		ArrayList<ComputerPlayer> computerPlayers = new ArrayList<ComputerPlayer>();
+		this.computerPlayers.clear();
 		for(int i = 0; i < numPlayers; i++) {
 			while(answer != 1) {
 				System.out.println("Please enter the strategy for computer player " + i);
@@ -279,6 +280,13 @@ public class MonopolyGame {
 			}
 			answer = 0; //reset strategy for next computer player
 		}
+
 		return computerPlayers;
 	}
+	
+	public ArrayList<ComputerPlayer> getComputerPlayerList() {
+	    return this.computerPlayers;
+	}
+
+
 }
