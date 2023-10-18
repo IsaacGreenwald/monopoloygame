@@ -26,10 +26,13 @@ public class CommunityChestCard {
 	 private Player player;
 	 private List<Runnable> cards = new ArrayList<>();
 	 private Random random;
+	 private MonopolyGame monopolyGame;
+	 
 
 	    public CommunityChestCard(Player player) {
 	        this.player = player;
 	        this.random = new Random();	 
+	        this.monopolyGame = monopolyGame;
 	        
 	        // Add all methods to the list
 	        cards.add(this::advanceToGo);
@@ -45,7 +48,7 @@ public class CommunityChestCard {
 	        cards.add(this::payHospitalFees);
 	        cards.add(this::paySchoolFees);
 	        cards.add(this::receiveConsultancyFee);
-	        cards.add(this::assessedForStreetRepair);
+	        // cards.add(this::assessedForStreetRepair);
 	        cards.add(this::wonBeautyContest);
 	        cards.add(this::youInherit);
 	        
@@ -100,8 +103,22 @@ public class CommunityChestCard {
 	    }
 
 	    public void itsYourBirthday() {
-	        System.out.println("It is your birthday. Collect $10 from every player");
-	        // Not sure about this yet
+	        System.out.println("It is your birthday. Collect $10 from every player.");
+	        
+	        // Get the number of computer players
+	        int numPlayers = monopolyGame.getNumPlayers();
+
+	        // Calculate the total money to be collected
+	        int totalCollected = numPlayers * 10;
+
+	        // Deduct $10 from each computer player
+	        ArrayList<ComputerPlayer> cpList = monopolyGame.getComputerPlayerList();
+	        for (ComputerPlayer cp : cpList) {
+	            cp.setMoney(cp.getMoney() - 10);
+	        }
+	        
+	        // Add the total collected money to the main player
+	        player.setMoney(player.getMoney() + totalCollected); 
 	    }
 
 	    public void lifeInsuranceMatures() {
@@ -124,10 +141,10 @@ public class CommunityChestCard {
 	        player.setMoney(player.getMoney() + 25);
 	    }
 
-	    public void assessedForStreetRepair() {
-	        System.out.println("You are assessed for street repair. $40 per house. $115 per hotel");
+	    // public void assessedForStreetRepair() {
+	        // System.out.println("You are assessed for street repair. $40 per house. $115 per hotel");
 	        // Not sure about this yet
-	    }
+	    // }
 
 	    public void wonBeautyContest() {
 	        System.out.println("You have won second prize in a beauty contest. Collect $10");
