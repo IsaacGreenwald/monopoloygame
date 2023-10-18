@@ -79,8 +79,11 @@ public class MonopolyGame {
 
 	        switch (choice) {
 	            case 1:
-	                int roll = player.move(board);
-	                System.out.println(player.getName() + " rolled a total of " + roll);
+	            	int[] diceRolls = player.rollDice(); // Assuming rollDice returns an array of two integers, representing the two dice rolls
+	            	int totalRoll = diceRolls[0] + diceRolls[1];
+	            	int moveValue = player.move(board, diceRolls[0], diceRolls[1]);
+	            	System.out.println(player.getName() + " rolled a total of " + totalRoll);
+
 	                break;
 	            case 2:
 	                mortgageOrUnmortgageProperty(player);
@@ -136,8 +139,11 @@ public class MonopolyGame {
 
             switch (choice) {
                 case 1:
-                    int roll = player.move(board);
-                    System.out.println(player.getName() + " rolled a total of " + roll);
+                	int[] diceRolls = player.rollDice(); // Assuming rollDice returns an array of two integers, representing the two dice rolls
+                	int totalRoll = diceRolls[0] + diceRolls[1];
+                	int moveValue = player.move(board, diceRolls[0], diceRolls[1]);
+                	System.out.println(player.getName() + " rolled a total of " + totalRoll);
+
                     break;
                 case 2:
                     mortgageOrUnmortgageProperty(player);

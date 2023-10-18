@@ -1,6 +1,12 @@
 import java.util.ArrayList;
+import java.util.Optional;
+import java.util.Random;
 
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
 import javafx.scene.image.ImageView;
+import javafx.stage.Window;
 
 /**
  * Represents a player in the Monopoly game, including their name, money, and position.
@@ -16,6 +22,7 @@ public class Player {
     private ImageView tokenImageView;
 	private int consecutiveDoubles;
     private boolean hasGetOutOfJailFreeCard = false;
+	private Window primaryStage;
 
 
 
@@ -38,10 +45,11 @@ public class Player {
      *
      * @return The combined result of the two dice rolls.
      */
-    public static int rollDice() {
-        int dice1 = (int) (Math.random() * 6) + 1; // Simulates the roll of the first die
-        int dice2 = (int) (Math.random() * 6) + 1; // Simulates the roll of the second die
-        return dice1 + dice2; // Returns the sum of the two dice rolls
+    public int[] rollDice() {
+        Random rand = new Random();
+        int dice1 = rand.nextInt(6) + 1;
+        int dice2 = rand.nextInt(6) + 1;
+        return new int[]{ dice1, dice2 };
     }
 
 
@@ -53,12 +61,13 @@ public class Player {
      * @param board The game board on which the player moves.
      * @return The total value of the dice roll which determined the move.
      */
-    public int move(Board board) {
-        int roll = 0;
+    public int move(Board board, int dice1, int dice2) {
+        int roll = dice1 + dice2; 
+
 
         if (inJail) {
             if (hasGetOutOfJailFreeCard()) {
-                System.out.println("Do you want to use your 'get out of jail free' card?");
+            	promptUser("Do you want to use your 'get out of jail free' card?");
                 useGetOutOfJailFreeCard();
                 inJail = false; // Assuming they use the card immediately
             } else if (jailTurns > 0) {
@@ -70,8 +79,7 @@ public class Player {
             }
         }
 
-        if (!inJail) { // If the player is not in jail, then handle the movement
-            roll = rollDice();
+        if (!inJail) {
             int oldPosition = getPosition();
             setPosition((getPosition() + roll) % Board.getSize());
             Spot currentSpot = board.getSpot(getPosition());
@@ -79,12 +87,10 @@ public class Player {
             // Check if the player passes Go and award them money: $200
             if (getPosition() < oldPosition) {                
                 setMoney(getMoney() + 200);
-                System.out.println(getName() + " passed 'Go' and collected $200!");
+                showAlert(getName() + " passed 'Go' and collected $200!");
             }
-
             // Check if the player rolled doubles
-            int dice1 = rollDice();
-            int dice2 = rollDice();
+
             if (dice1 == dice2) {
                 consecutiveDoubles++;
                 if (consecutiveDoubles == 3) {
@@ -93,20 +99,50 @@ public class Player {
                     return 0; // Player doesn't move further in this turn
                 } else {
                     // Player rolled doubles take another turn
-                    System.out.println(getName() + " rolled doubles! Roll again.");
+                    showAlert(getName() + " rolled doubles! Roll again.");
                     return roll; // Return the dice roll value for the current turn
                 }
             } else {
                 // Reset consecutive doubles counter
                 consecutiveDoubles = 0;
             }
+            
 
-            currentSpot.onABoardSpot(this);
         }
 
         return roll; // Return the roll value or 0 when in jail
     }
 
+	/**
+	 * Displays an alert with a given message to the player.
+	 *
+	 * @param message The message to be displayed in the alert.
+	 */
+	private void showAlert(String message) {
+		Alert alert = new Alert(Alert.AlertType.INFORMATION);
+		alert.initOwner(primaryStage); 
+		alert.setTitle("Monopoly Game Info");
+		alert.setHeaderText(null);
+		alert.setContentText(message);
+		alert.showAndWait();
+	}
+	
+	/**
+	 * Prompts the user with a dialog containing a specific message and set of options.
+	 *
+	 * @param message The message to be displayed in the dialog.
+	 * @param options Varargs of ButtonType options for the dialog.
+	 * @return The ButtonType choice selected by the user
+	 */
+	private ButtonType promptUser(String message, ButtonType... options) {
+		Dialog<ButtonType> dialog = new Dialog<>();
+		dialog.initOwner(primaryStage);
+		dialog.setTitle("Property Purchase");
+		dialog.setContentText(message);
+		dialog.getDialogPane().getButtonTypes().addAll(options);
+		Optional<ButtonType> result = dialog.showAndWait();
+		return result.orElse(ButtonType.NO);
+	}
 
 
     // Method to check if the player is in jail
@@ -207,5 +243,11 @@ public class Player {
 	        this.hasGetOutOfJailFreeCard = false;
 	        // Logic to get out of jail
 	    }
+	    
+	    
 	}
+	public void setPrimaryStage(Window primaryStage) {
+	    this.primaryStage = primaryStage;
+	}
+
 }
