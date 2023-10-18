@@ -42,7 +42,7 @@ public class MonopolyGame {
 		}
 	}
 	private Player loadSavedGame(Scanner scanner) throws SQLException {
-		Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/MonopolyGame", "root", "root");
+		Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:8889/MonopolyGame", "root", "root");
 
 		// Load the game state from the database
 		GameDatabaseOperations dbOps = new GameDatabaseOperations(conn);
@@ -83,7 +83,7 @@ public class MonopolyGame {
 
 			switch (choice) {
 			case 1:
-				int roll = player.move(board);
+				int roll = player.move(board, roll, roll);
 				System.out.println(player.getName() + " rolled a total of " + roll);
 				break;
 			case 2:
@@ -116,7 +116,7 @@ public class MonopolyGame {
 		String playerName = getPlayerName(scanner1);
 		MonopolyPiece chosenPiece = getChosenPiece(scanner1);
 
-		Player player = new Player(playerName + " (" + chosenPiece.getPieceName() + ")");
+		Player player = new Player(playerName + " (" + chosenPiece.getPieceName() + ")", chosenPiece, turn);
 		player.setMoney(1500);
 		Board board = new Board(null);
 
@@ -146,7 +146,7 @@ public class MonopolyGame {
 
 				switch (choice) {
 				case 1:
-					int roll = player.move(board);
+					int roll = player.move(board, roll, roll);
 					System.out.println(player.getName() + " rolled a total of " + roll);
 					turn = 1; //switch to computer turn
 					break;
@@ -177,7 +177,7 @@ public class MonopolyGame {
 			else if(turn == 1) {
 				for(int i = 0; i < numPlayers; i++) {
 					System.out.println("Computer player " + i + "is now rolling");
-					int computerRoll = computerPlayers.get(i).move(board);
+					int computerRoll = computerPlayers.get(i).move(board, computerRoll, computerRoll);
 					System.out.println("They rolled a total of" + computerRoll);
 				}
 				turn = 0;
@@ -287,5 +287,6 @@ public class MonopolyGame {
 	public ArrayList<ComputerPlayer> getComputerPlayerList() {
 	    return this.computerPlayers;
 	}
+}
 
 

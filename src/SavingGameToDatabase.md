@@ -24,7 +24,6 @@ public class Game {
 
     public void startGame() {
         setupAutoSave();
-        // Rest of your game logic here
     }
 }
 

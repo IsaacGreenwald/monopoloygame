@@ -8,7 +8,7 @@ public class GameTest {
         // Establish a database connection
         Connection conn = null;
         try {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/MonopolyGame", "root", "root");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:8889/MonopolyGame", "root", "root");
         } catch (SQLException e) {
             e.printStackTrace();
         }

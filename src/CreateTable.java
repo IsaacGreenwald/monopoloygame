@@ -5,7 +5,7 @@ import java.sql.Statement;
 
 public class CreateTable {
 
-    public static final String PORT_NUMBER = "3306";
+    public static final String PORT_NUMBER = "8889";
 
     public CreateTable() {
         // TODO Auto-generated constructor stub
