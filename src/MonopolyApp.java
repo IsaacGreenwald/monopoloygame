@@ -286,7 +286,10 @@ public class MonopolyApp extends Application {
 	}
 
 
-
+/**
+ * Handles the roll button press and calls functions responsible for main movement methods.
+ * @param anchorPane - the main stage where the players will traverse. 
+ */
 	public void onDiceRollButtonPressed(AnchorPane anchorPane) {
 		Player currentPlayer = getCurrentPlayer();
 
@@ -433,7 +436,7 @@ private ImageView createDiceImageView(int result) {
 private void setupPlayerInfoPanel() {
 	playerInfoContainer = new VBox();
 	playerInfoContainer.setSpacing(16); 
-	AnchorPane.setRightAnchor(playerInfoContainer, 90.0);  
+	AnchorPane.setRightAnchor(playerInfoContainer, 50.0);  
 	root.getChildren().add(playerInfoContainer);
 	populatePlayerInfo(players, playerInfoContainer);
 
@@ -527,7 +530,7 @@ public void populatePlayerInfo(List<Player> players, VBox container) {
         idx++;
     }
 
-    container.setPadding(new Insets(10, 10, 10, 90));
+    container.setPadding(new Insets(10, 10, 10, 5));
     container.setSpacing(10);
 }
 
