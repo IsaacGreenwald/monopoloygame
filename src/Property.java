@@ -24,6 +24,7 @@ public class Property implements Spot {
 		this.setPrice(price);
 		this.mortgageValue = mortgageValue;
 		this.primaryStage = primaryStage;
+		this.owner = null;
 
 	}
 
@@ -154,7 +155,7 @@ public class Property implements Spot {
 	 * @param options Varargs of ButtonType options for the dialog.
 	 * @return The ButtonType choice selected by the user
 	 */
-	private ButtonType promptUser(String message, ButtonType... options) {
+	protected ButtonType promptUser(String message, ButtonType... options) {
 		Dialog<ButtonType> dialog = new Dialog<>();
 		dialog.initOwner(primaryStage);
 		dialog.setTitle("Property Purchase");
@@ -164,6 +165,17 @@ public class Property implements Spot {
 		return result.orElse(ButtonType.NO);
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if(o==this) {
+			return true;
+		}
+		if(!(o instanceof Property)) {
+			return false;
+		}
+		Property property = (Property)o;
+		return false; //finish later for tests
+	}
 
 
 
@@ -177,6 +189,14 @@ public class Property implements Spot {
 
 	public int getMortgageValue() {
 		return mortgageValue;
+	}
+	
+	public Player getOwner() {
+		return owner;
+	}
+
+	public void setOwner(Player player) {
+		this.owner = player;
 	}
 
 }

@@ -3,6 +3,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class GameTest {
+	
     public static void main(String[] args) throws SQLException {
         // Establish a database connection
         Connection conn = null;
@@ -20,7 +21,7 @@ public class GameTest {
         MonopolyGame game = new MonopolyGame(dbOps);
 
         // Create a new Board object
-        Board board = new Board(); // Initialize the board
+        Board board = new Board(null); // Initialize the board
         
         // Start the Monopoly game
         game.EntryMenu(board);

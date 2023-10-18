@@ -13,16 +13,20 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Random;
+import java.util.Scanner;
 
 /**
  * This is the main UI class for our monopoly game and it utilizes javaFX
  */
 public class MonopolyApp extends Application {
 	
+	private static final int DEFAULT = 1;
     private VBox playerInfoContainer;
     private Board board;
     private AnchorPane root;
@@ -109,7 +113,7 @@ public class MonopolyApp extends Application {
         gameGrid = grid;
 
 
-
+        
 
         Button rollDiceButton = new Button("Roll Dice");
         rollDiceButton.setOnAction(event -> rollDice(root));
@@ -185,6 +189,65 @@ public class MonopolyApp extends Application {
         Player currentPlayer = players.get(currentPlayerIndex);
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
         return currentPlayer;
+    }
+    
+    /**
+     * prompt the user for the number of computer players they wish to play
+     * against and return that value
+     * 
+     */
+    private int numberComputerPlayers() {
+    	
+    	Scanner in = new Scanner(System.in);
+		int answer = 0;
+		while(answer < 1 || answer > 3) {
+			System.out.println("How many computers would you like to play against?(1-3)");
+
+			try {
+				answer = in.nextInt();
+				in.nextLine();
+			}catch(InputMismatchException e) {
+				System.out.println("Please enter a valid integer 1-3");
+				in.nextLine();
+
+			}
+		}
+		return answer;
+    }
+    
+    /**
+     * prompt the user for strategies and monopoly pieces for each computer player
+     * computer players are then added to an arraylist for computer player turns
+     * return that array list
+     */
+    private ArrayList<ComputerPlayer> getComputerPlayers(int numPlayers){
+    	
+    	Scanner in = new Scanner(System.in);
+		int answer = 0;
+		ArrayList<ComputerPlayer> computerPlayers = new ArrayList<ComputerPlayer>();
+		for(int i = 0; i < numPlayers; i++) {
+			while(answer != 1) {
+				System.out.println("Please enter the strategy for computer player " + i);
+				System.out.println("1: Default");
+				try {
+					answer = in.nextInt();
+					in.nextLine();
+				}catch(InputMismatchException e) {
+					System.out.println("Please choose a valid strategy");
+					in.nextLine();
+				}
+			}
+			switch(answer){
+			case DEFAULT: 
+				ComputerPlayer computerPlayer = new ComputerPlayer(String.valueOf(i), new DefaultStrategy());
+				//MonopolyPiece monopolyPiece = getChosenPiece(in);
+				//computerPlayer.setPiece(monopolyPiece);
+				computerPlayers.add(computerPlayer);
+
+			}
+			answer = 0; //reset strategy for next computer player
+		}
+		return computerPlayers;
     }
 
     /**
