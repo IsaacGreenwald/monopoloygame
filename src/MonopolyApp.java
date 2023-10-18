@@ -1,6 +1,7 @@
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -12,26 +13,27 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Random;
-import java.util.Scanner;
 
 /**
  * This is the main UI class for our monopoly game and it utilizes javaFX
  */
 public class MonopolyApp extends Application {
 	
-	private static final int DEFAULT = 1;
     private VBox playerInfoContainer;
     private Board board;
     private AnchorPane root;
-
+    private GameDatabaseOperations dbOps;
     private GridPane gameGrid; 
+
 
 
     private static final String[] DICE_IMAGES = {
@@ -39,8 +41,8 @@ public class MonopolyApp extends Application {
     };
     
     private static final double DICE_SIZE = 60.0; 
-    private static final double spotWidth = 109.9; 
-    private static final double spotHeight = 83.2; 
+    private static final double spotWidth = 109.9;
+    private static final double spotHeight = 83.2;
     private int currentPlayerIndex = 0;
     List<Player> players = new ArrayList<>();
 	private Stage primaryStage;
@@ -60,95 +62,134 @@ public class MonopolyApp extends Application {
  */
     @Override
     public void start(Stage primaryStage) {
-    	  this.primaryStage = primaryStage;
-    	    board = new Board(primaryStage);
-    	Image boardImage = new Image(getClass().getClassLoader().getResource("background1.jpg").toExternalForm());
+	// Create and initialize the database connection
+    Connection dbConnection = initializeDatabaseConnection();
 
-        ImageView boardView = new ImageView(boardImage);
-        boardView.setFitHeight(832.0);
-        boardView.setFitWidth(1099.0);
-        boardView.setLayoutX(1.0);
-        boardView.setLayoutY(70.0);
-        boardView.setPickOnBounds(true);
-        boardView.setPreserveRatio(true);
-
-        root = new AnchorPane();
-        root.setMaxSize(1100.0, 900.0);
-        root.setMinSize(1100.0, 980.0);
-        root.setPrefSize(1100.0, 900.0);
-
-        root.getChildren().add(boardView);
-        
-        double cornerWidth = 273.0;
-        double cornerHeight = 250.0;
-        double spotWidth = 170.0;
-        double spotHeight = 205.0;
-
-        GridPane grid = new GridPane();
-        grid.setGridLinesVisible(false); 
-        grid.setLayoutX(1.0);          
-        grid.setLayoutY(70.0);          
-        grid.setPrefWidth(1099.0);      
-        grid.setPrefHeight(832.0);      
-
-        
-        for (int i = 0; i < 11; i++) {
-            ColumnConstraints colConst = new ColumnConstraints();
-            RowConstraints rowConst = new RowConstraints();
-
-           
-            if (i == 0 || i == 10) {
-                colConst.setPrefWidth(cornerWidth);
-                rowConst.setPrefHeight(cornerHeight);
-            } else {
-                colConst.setPrefWidth(spotWidth);
-                rowConst.setPrefHeight(spotHeight);
-            }
-
-            grid.getColumnConstraints().add(colConst);
-            grid.getRowConstraints().add(rowConst);
-        }
-
-        root.getChildren().add(grid);
-        gameGrid = grid;
-
-
-        
-
-        Button rollDiceButton = new Button("Roll Dice");
-        rollDiceButton.setOnAction(event -> rollDice(root));
-
-        HBox buttonBox = new HBox(10);
-        buttonBox.getChildren().add(rollDiceButton);
-        buttonBox.setLayoutX(10.0);
-        buttonBox.setLayoutY(10.0);
-
-        root.getChildren().add(buttonBox);
-        setupPlayerInfoPanel();
-        initializePlayersOnBoard();
-
-
-        Scene scene = new Scene(root);
-
-        primaryStage.setScene(scene);
-        primaryStage.setTitle("Monopoly Game");
-        primaryStage.setMaximized(true);
-        primaryStage.show();
+    // Create an instance of GameDatabaseOperations and pass the connection
+    dbOps = new GameDatabaseOperations(dbConnection);
+    this.primaryStage = primaryStage;
+    board = new Board(primaryStage);
+    Image boardImage = new Image(getClass().getClassLoader().getResource("background1.jpg").toExternalForm());
+    ImageView boardView = new ImageView(boardImage);
+    
+    boardView.setFitHeight(832.0);
+    boardView.setFitWidth(1099.0);
+    boardView.setLayoutX(1.0);
+    boardView.setLayoutY(70.0);
+    boardView.setPickOnBounds(true);
+    boardView.setPreserveRatio(true);
+    
+    root = new AnchorPane();
+    root.setId("anchorPaneId");
+    root.setMaxSize(1100.0, 900.0);
+    root.setMinSize(1100.0, 980.0);
+    root.setPrefSize(1100.0, 900.0);
+    root.getChildren().add(boardView);
+    
+    double cornerWidth = 273.0;
+    double cornerHeight = 250.0;
+    double spotWidth = 170.0;
+    double spotHeight = 205.0;
+    
+    GridPane grid = new GridPane();
+    grid.setGridLinesVisible(false);
+    
+    grid.setLayoutX(1.0);
+    grid.setLayoutY(70.0);
+    grid.setPrefWidth(1099.0);
+    grid.setPrefHeight(832.0);
+    
+    for (int i = 0; i < 11; i++) {
+    ColumnConstraints colConst = new ColumnConstraints();
+    RowConstraints rowConst = new RowConstraints();
+    if (i == 0 || i == 10) {
+    colConst.setPrefWidth(cornerWidth);
+    rowConst.setPrefHeight(cornerHeight);
+    } else {
+    colConst.setPrefWidth(spotWidth);
+    rowConst.setPrefHeight(spotHeight);
     }
+    grid.getColumnConstraints().add(colConst);
+    grid.getRowConstraints().add(rowConst);
+    }
+    
+    root.getChildren().add(grid);
+    gameGrid = grid;
+    Button saveButton = new Button("Save");
+    saveButton.setPrefWidth(100);
+    saveButton.setPrefHeight(40);
+    saveButton.setOnAction(event -> onSaveButtonPressed());
+    saveButton.getStyleClass().add("custom-button");
 
+    Button rollDiceButton = new Button("Roll Dice");
+    rollDiceButton.setPrefWidth(100);
+    rollDiceButton.setPrefHeight(40);
+    rollDiceButton.setOnAction(event -> onDiceRollButtonPressed(root));
+    rollDiceButton.getStyleClass().add("custom-button");
+    HBox buttonBox = new HBox(10);
+    buttonBox.getChildren().addAll(rollDiceButton, saveButton);
+    buttonBox.setLayoutX(10.0);
+    buttonBox.setLayoutY(10.0);
+    root.getChildren().add(buttonBox);
+    
+    setupPlayerInfoPanel();
+    initializePlayersOnBoard();
+    
+    Scene scene = new Scene(root);
+    scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
+    primaryStage.setScene(scene);
+    primaryStage.setTitle("Monopoly Game");
+    primaryStage.setMaximized(true);
+    primaryStage.show();
+    }
+    private Connection initializeDatabaseConnection() {
+        Connection connection = null;
+        try {
+            // Initialize your database connection here
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/MonopolyGame", "root", "root");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.err.println("Error while connecting to the database: " + e.getMessage());
+        }
+        return connection;
+    }
+    private void onSaveButtonPressed() {
+        // Get the current player who will be saved to the database
+        Player currentPlayer = getCurrentPlayer();
+        // Insert the new player into the database
+        try {
+            dbOps.insertPlayer(currentPlayer.getName(), currentPlayer.getMoney(), currentPlayer.getPosition());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        // Call the save game method from your database operations class
+        try {
+            dbOps.updatePlayerMoney(currentPlayer.getName(), currentPlayer.getMoney());
+            System.out.println("Player's money updated successfully!");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }                   
+        try {
+            dbOps.saveGame(currentPlayer.getName(), currentPlayer.getMoney(), currentPlayer.getPosition(), board);
+            System.out.println("Game saved successfully!");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Rolls dice for the current player and moves their piece 
      * according to the roll result.
      * @param anchorPane - the pane where dice images are displayed.
      */
-    public void rollDice(AnchorPane anchorPane) {
-        Player currentPlayer = getCurrentPlayer(); 
+    public int[] rollDice(AnchorPane anchorPane) {
+        Player currentPlayer = getCurrentPlayer();
 
         anchorPane.getChildren().removeIf(node -> node instanceof ImageView && node.getStyleClass().contains("diceImage"));
 
-        int result = Player.rollDice();
-        ImageView[] diceImageViews = createDiceImageViews(result);
+        int[] diceResults = currentPlayer.rollDice(); // Retrieve the dice results as an array
+        Pair<int[], ImageView[]> diceResultPair = createDiceImageViews(diceResults[0] + diceResults[1]);
+        ImageView[] diceImageViews = diceResultPair.getValue();
 
         double totalDiceWidth = 2 * DICE_SIZE + 10; 
         double startX = (anchorPane.getWidth() - totalDiceWidth) / 2; 
@@ -163,91 +204,52 @@ public class MonopolyApp extends Application {
         }
         anchorPane.getChildren().addAll(diceImageViews);
 
-        int currentPosition = currentPlayer.getPosition();
-        int newPosition = (currentPosition + result) % Board.getSize();
-        currentPlayer.setPosition(newPosition);
+        return diceResults; // Return the dice results directly
+    }
+
+
+    
+    public void onDiceRollButtonPressed(AnchorPane anchorPane) {
+        Player currentPlayer = getCurrentPlayer();
+        
+        // Roll the dice and get the result
+        int[] diceResults = rollDice(anchorPane);
+        int dice1 = diceResults[0];
+        int dice2 = diceResults[1];
+        
+        // Apply the move logic using the dice result
+        currentPlayer.move(board, dice1, dice2);
+        
+        // Since move() already updates the player's position, we don't need the additional logic
+        // to update the position again here. Just remove the token and reposition the player.
         removeTokenFromBoard(currentPlayer);
-        positionPlayerOnBoard(currentPlayer, newPosition);
+        positionPlayerOnBoard(currentPlayer, currentPlayer.getPosition());
 
-        Spot landedSpot = board.getSpot(newPosition);
+        Spot landedSpot = board.getSpot(currentPlayer.getPosition());
         if(landedSpot == null) {
-            System.out.println("Error: Spot not found at position " + newPosition);
-            System.out.println("New position is: " + newPosition + ", landedSpot is: " + (landedSpot == null ? "null" : landedSpot.getName()));
-
+            System.out.println("Error: Spot not found at position " + currentPlayer.getPosition());
             return;
         }
 
         if (landedSpot instanceof Property) {
-            showSpotInfo(currentPlayer, newPosition); 
+            showSpotInfo(currentPlayer, currentPlayer.getPosition()); 
         }
+        
+        nextPlayer();
     }
+
+
+
     /**
      * Retrieves the current player based on the player index.
      * @return Player the player whose turn it currently is.
      */
     private Player getCurrentPlayer() {
-        Player currentPlayer = players.get(currentPlayerIndex);
+        return players.get(currentPlayerIndex);
+    }
+
+    private void nextPlayer() {
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
-        return currentPlayer;
-    }
-    
-    /**
-     * prompt the user for the number of computer players they wish to play
-     * against and return that value
-     * 
-     */
-    private int numberComputerPlayers() {
-    	
-    	Scanner in = new Scanner(System.in);
-		int answer = 0;
-		while(answer < 1 || answer > 3) {
-			System.out.println("How many computers would you like to play against?(1-3)");
-
-			try {
-				answer = in.nextInt();
-				in.nextLine();
-			}catch(InputMismatchException e) {
-				System.out.println("Please enter a valid integer 1-3");
-				in.nextLine();
-
-			}
-		}
-		return answer;
-    }
-    
-    /**
-     * prompt the user for strategies and monopoly pieces for each computer player
-     * computer players are then added to an arraylist for computer player turns
-     * return that array list
-     */
-    private ArrayList<ComputerPlayer> getComputerPlayers(int numPlayers){
-    	
-    	Scanner in = new Scanner(System.in);
-		int answer = 0;
-		ArrayList<ComputerPlayer> computerPlayers = new ArrayList<ComputerPlayer>();
-		for(int i = 0; i < numPlayers; i++) {
-			while(answer != 1) {
-				System.out.println("Please enter the strategy for computer player " + i);
-				System.out.println("1: Default");
-				try {
-					answer = in.nextInt();
-					in.nextLine();
-				}catch(InputMismatchException e) {
-					System.out.println("Please choose a valid strategy");
-					in.nextLine();
-				}
-			}
-			switch(answer){
-			case DEFAULT: 
-				ComputerPlayer computerPlayer = new ComputerPlayer(String.valueOf(i), new DefaultStrategy());
-				//MonopolyPiece monopolyPiece = getChosenPiece(in);
-				//computerPlayer.setPiece(monopolyPiece);
-				computerPlayers.add(computerPlayer);
-
-			}
-			answer = 0; //reset strategy for next computer player
-		}
-		return computerPlayers;
     }
 
     /**
@@ -255,16 +257,16 @@ public class MonopolyApp extends Application {
      * @param result - the sum of values from two dice.
      * @return ImageView[] an array containing images of the dice.
      */
-    private ImageView[] createDiceImageViews(int result) {
+    private Pair<int[], ImageView[]> createDiceImageViews(int result) {
         Random rand = new Random();
+        int dice1, dice2;
 
         if (result < 2 || result > 12) {
             throw new IllegalArgumentException("Invalid dice result: " + result);
         }
 
-        int dice1, dice2;
         do {
-            dice1 = rand.nextInt(6) + 1; 
+            dice1 = rand.nextInt(6) + 1;
             dice2 = result - dice1;     
         } while (dice2 < 1 || dice2 > 6);
 
@@ -272,8 +274,9 @@ public class MonopolyApp extends Application {
         diceImageViews[0] = createDiceImageView(dice1 - 1);
         diceImageViews[1] = createDiceImageView(dice2 - 1);
 
-        return diceImageViews;
+        return new Pair<>(new int[]{ dice1, dice2 }, diceImageViews);
     }
+
 
     /**
      * Creates an ImageView of a dice based on its value.
@@ -337,18 +340,25 @@ public class MonopolyApp extends Application {
      */
     private void createSamplePlayers() { 
         Player player1 = new Player("Quinn");
+        player1.setPrimaryStage(primaryStage);
         player1.setPiece(MonopolyPiece.HAT);
         player1.setMoney(1500);
 
         Player player2 = new Player("Isaac");
+        player2.setPrimaryStage(primaryStage);
+
         player2.setPiece(MonopolyPiece.CAT);
         player2.setMoney(1500);
 
         Player player3 = new Player("Nick");
+        player3.setPrimaryStage(primaryStage);
+
         player3.setPiece(MonopolyPiece.DOG);
         player3.setMoney(1500);
         
         Player player4 = new Player("Yunus");
+        player4.setPrimaryStage(primaryStage);
+
         player4.setPiece(MonopolyPiece.HORSE);
         player4.setMoney(1500);
 
@@ -400,12 +410,28 @@ public class MonopolyApp extends Application {
      * Moves a player's piece to a specified spot on the board.
      * @param player the player to move.
      * @param spot the destination spot.
-     */ 
+     */
     public void positionPlayerOnBoard(Player player, int spot) {
-        ImageView playerToken = new ImageView(new Image(player.getPiece().getIconURL()));
-        playerToken.setFitWidth(30);
-        playerToken.setFitHeight(30);
-        playerToken.setUserData(player); 
+        // Remove the old token (if it exists)
+        removeTokenFromBoard(player);
+        
+        // Look for existing token on the board
+        ImageView playerToken = null;
+        for (Node node : gameGrid.getChildren()) {
+            if (node instanceof ImageView && node.getUserData() == player) {
+                playerToken = (ImageView) node;
+                break;
+            }
+        }
+
+        // If token doesn't exist, create a new one
+        if (playerToken == null) {
+            playerToken = new ImageView(new Image(player.getPiece().getIconURL()));
+            playerToken.setFitWidth(30);
+            playerToken.setFitHeight(30);
+            playerToken.setUserData(player);
+            gameGrid.getChildren().add(playerToken);
+        }
 
         Point2D spotCoordinates = getGridCoordinates(spot);
 
@@ -416,9 +442,8 @@ public class MonopolyApp extends Application {
 
         GridPane.setColumnIndex(playerToken, (int) spotCoordinates.getX());
         GridPane.setRowIndex(playerToken, (int) spotCoordinates.getY());
-
-        gameGrid.getChildren().add(playerToken);
     }
+
     /**
      * Removes a player's piece from the board.
      * @param player - the player whose piece needs to be removed.
@@ -464,4 +489,3 @@ public class MonopolyApp extends Application {
     }
     
 }
-
