@@ -112,7 +112,7 @@ public class MonopolyApp extends Application {
     root.getChildren().add(grid);
     gameGrid = grid;
     
-    Button rollDiceButton = new Button("Roll Dice");
+    Button rollDiceButton = new Button("ROLL DICE");
     rollDiceButton.setPrefWidth(250);
     rollDiceButton.setPrefHeight(40);
     rollDiceButton.setOnAction(event -> onDiceRollButtonPressed(root));
@@ -124,7 +124,7 @@ public class MonopolyApp extends Application {
     root.getChildren().add(buttonBox);
     
     
-    Button MortgageButton = new Button("Mortgage Properties");
+    Button MortgageButton = new Button("MORTGAGE PROPERTIES");
     MortgageButton.setPrefWidth(300);
     MortgageButton.setPrefHeight(40);
     MortgageButton.setOnAction(event -> mortgageOrUnmortgageProperty(root));
