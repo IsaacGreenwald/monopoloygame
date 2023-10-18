@@ -14,6 +14,8 @@ public class ComputerPlayer extends Player {
     private int jailTurns;
     private static Strategy strategy;
     private int configuration;
+    private boolean lost = false;
+
 
     /**
      * Constructor for the computer player class

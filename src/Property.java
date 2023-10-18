@@ -75,7 +75,7 @@ public class Property implements Spot {
 	        playerDecision = humanPlayerBuyProperty(player);
 	    }
 
-	    DialogUtils.showAlert("Your turn is now over.");
+	    DialogUtils.showAlert(player.getName() + ", your turn is now over.");
 	    
 	    return playerDecision;
 	}
@@ -97,7 +97,7 @@ private boolean computerPlayerBuyProperty(ComputerPlayer player) {
 
 private boolean proceedWithPurchase(Player player, boolean wantsToBuy) {
     if (this.price > player.getMoney()) {
-        DialogUtils.showAlert("You do not have enough money to purchase this property.");
+        DialogUtils.showAlert(player.getName() + " do not have enough money to purchase this property.");
         return false;
     }
 
@@ -106,11 +106,11 @@ private boolean proceedWithPurchase(Player player, boolean wantsToBuy) {
         int newBalance = player.getMoney() - this.price;
         player.setMoney(newBalance);
         this.owner = player;
-        DialogUtils.showAlert("You have bought " + this.name + ". You now have: $" + newBalance);
+        DialogUtils.showAlert(player.getName() + " have bought " + this.name + ". You now have: $" + newBalance);
         return true;
     }
 
-    DialogUtils.showAlert("Your turn is now over.");
+    DialogUtils.showAlert(player.getName() + ", your turn is now over.");
     return false;
 }
 

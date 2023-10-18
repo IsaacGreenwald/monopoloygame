@@ -18,14 +18,14 @@ public class Board {
      */
     private void initializeSpots() {
     	spots[0] = new ActionSpot("Go", ActionSpot.ActionType.GO);
-    	spots[1] = new Property("Mediterranean Avenue", 60, 2, 30, primaryStage);
+    	spots[1] = new Property("Mediterranean Avenue", 60, 40, 30, primaryStage);
     	spots[2] = new ActionSpot("Community Chest", ActionSpot.ActionType.COMMUNITY_CHEST);
-    	spots[3] = new Property("Baltic Avenue", 60, 4, 30, primaryStage);
+    	spots[3] = new Property("Baltic Avenue", 60, 100, 30, primaryStage);
     	spots[4] = new ActionSpot("Income Tax", ActionSpot.ActionType.INCOME_TAX);
     	spots[5] = new Property("Reading Railroad", 200, 25, 100, primaryStage);
-    	spots[6] = new Property("Oriental Avenue", 100, 6, 50, primaryStage);
+    	spots[6] = new Property("Oriental Avenue", 100, 60, 50, primaryStage);
     	spots[7] = new ActionSpot("Chance", ActionSpot.ActionType.CHANCE);
-    	spots[8] = new Property("Vermont Avenue", 100, 6, 50, primaryStage);
+    	spots[8] = new Property("Vermont Avenue", 100, 60, 50, primaryStage);
     	spots[9] = new Property("Connecticut Avenue", 120, 8, 60, primaryStage);
     	spots[10] = new ActionSpot("Jail / Just Visiting", ActionSpot.ActionType.JAIL);
     	spots[11] = new Property("St. Charles Place", 140, 10, 70, primaryStage);

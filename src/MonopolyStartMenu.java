@@ -46,7 +46,7 @@ public class MonopolyStartMenu extends Application {
 
         Button newGameButton = new Button("New Game");
         Button loadGameButton = new Button("Load Game");
-        newGameButton.setDisable(true); // Initially disable the button
+        newGameButton.setDisable(true);
 
         // Create a list of available pieces
         ComboBox<MonopolyPiece> pieceSelector = new ComboBox<>();

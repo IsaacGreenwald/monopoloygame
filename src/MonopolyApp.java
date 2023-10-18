@@ -18,6 +18,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 
@@ -342,13 +343,43 @@ public class MonopolyApp extends Application {
 		} else {
 			return; 
 		}
+		
+        removeLostPlayers();
+        checkForWinner();
 	}
 
 
 	nextPlayer();
-	refreshPlayerInfoPanel();
 }
+	
+	private void removeLostPlayers() {
+	    players.removeIf(Player::hasLost);
+	}
 
+	private void declareWinner(Player winner) {
+	    Alert alert = new Alert(AlertType.INFORMATION);
+	    alert.setTitle("Game Over");
+	    alert.setHeaderText("Player " + winner.getName() + " is the winner!");
+	    alert.setContentText("Congratulations! You are the last player standing.");
+	    alert.showAndWait();
+	}
+
+	private void checkForWinner() {
+	    int activePlayers = 0;
+	    Player winner = null;
+
+	    for (Player player : players) {
+	        if (!player.hasLost()) {
+	            System.out.println(activePlayers);
+	            activePlayers++;
+	            winner = player; 
+	        }
+	    }
+
+	    if (activePlayers == 1) {
+	        declareWinner(winner);
+	    }
+	}
 
 
 /**
@@ -361,6 +392,7 @@ private Player getCurrentPlayer() {
 
 private void nextPlayer() {
 	currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+	refreshPlayerInfoPanel();
 }
 
 /**
@@ -501,12 +533,18 @@ public void populatePlayerInfo(List<Player> players, VBox container) {
  * @param player - the player whose money display needs to be updated.
  */
 public void updatePlayerMoney(Player player) {
-	Label playerMoneyLabel = (Label) playerInfoContainer.lookup("#" + player.getName() + "_money");
-	if (playerMoneyLabel != null) {
-		playerMoneyLabel.setText("Amount: $" + player.getMoney());
-
-	}
+    Label playerMoneyLabel = (Label) playerInfoContainer.lookup("#" + player.getName() + "_money");
+    if (playerMoneyLabel != null) {
+        playerMoneyLabel.setText("Amount: $" + player.getMoney());
+        if (player.getMoney() <= 0) {
+            player.hasLost();
+        }
+    }
 }
+
+
+
+
 /**
  * Moves a player's piece to a specified spot on the board.
  * @param player the player to move.
