@@ -55,44 +55,44 @@ public class ChanceCard {
     }
 	
 	public void advanceToBoardWalk() {
-		System.out.println("Advance to BoardWalk");
+		DialogUtils.showAlert("Advance to BoardWalk");
 		player.setPosition(39);
 	}
 	
 	public void advanceToGo() {
-		System.out.println("Advance to Go (Collect $200)");
+		DialogUtils.showAlert("Advance to Go (Collect $200)");
 		player.setPosition(0);
 		player.setMoney(player.getMoney() + 200);
 	}
 	
     public void advanceToIllinoisAvenue() {
-        System.out.println("Advance to Illinois Avenue. If you pass Go, collect $200");
+    	DialogUtils.showAlert("Advance to Illinois Avenue. If you pass Go, collect $200");
         player.setPosition(24);
         // if they pass go collect 200
     }
 
     public void advanceToStCharlesPlace() {
-        System.out.println("Advance to St. Charles Place. If you pass Go, collect $200");
+    	DialogUtils.showAlert("Advance to St. Charles Place. If you pass Go, collect $200");
         player.setPosition(11);
         // if they pass go collect 200
     }
 
     public void advanceToNearestRailroad() {
-        System.out.println("Advance to the nearest Railroad...");
+    	DialogUtils.showAlert("Advance to the nearest Railroad...");
         int position = player.getPosition();
 
         if (position < 5 || position >= 35) {
             player.setPosition(5); // Advance to the railroad at position 5
-            System.out.println("You advanced to Reading Railroad");
+            DialogUtils.showAlert("You advanced to Reading Railroad");
         } else if (position < 15) {
             player.setPosition(15); // Advance to the railroad at position 15
-            System.out.println("You advanced to Pennsylvania Railroad");
+            DialogUtils.showAlert("You advanced to Pennsylvania Railroad");
         } else if (position < 25) {
             player.setPosition(25); // Advance to the railroad at position 25
-            System.out.println("You advanced to B. & O. Railroad");
+            DialogUtils.showAlert("You advanced to B. & O. Railroad");
         } else if (position < 35) {
             player.setPosition(35); // Advance to the railroad at position 35
-            System.out.println("You advanced to Short Line");
+            DialogUtils.showAlert("You advanced to Short Line");
         }
     }
 
@@ -109,51 +109,49 @@ public class ChanceCard {
 
 
     public void bankPaysDividend() {
-        System.out.println("Bank pays you dividend of $50");
+    	DialogUtils.showAlert("Bank pays you dividend of $50");
         player.setMoney(player.getMoney() + 50);
     }
 
     public void getOutOfJailFree() {
-    	System.out.println("Get Out of Jail Free");
-        System.out.println(player.getName() + " has recieved a get out of jail free card");
+    	DialogUtils.showAlert("Get Out of Jail Free");
+    	DialogUtils.showAlert(player.getName() + " has recieved a get out of jail free card");
         player.giveGetOutOfJailFreeCard();
     }
 
     public void goBackThreeSpaces() {
-        System.out.println("Go Back 3 Spaces");
+    	DialogUtils.showAlert("Go Back 3 Spaces");
         player.setPosition(player.getPosition() - 3);
-        System.out.println("You are not on " + player.getPosition());
+        DialogUtils.showAlert("You are not on " + player.getPosition());
     }
 
     public void goToJail() {
-        System.out.println("Go to Jail. Go directly to jail, do not pass Go, do not collect $200");
+    	DialogUtils.showAlert("Go to Jail. Go directly to jail, do not pass Go, do not collect $200");
         player.setInJail(true);
         player.setPosition(10);
     }
 
     public void makeGeneralRepairs() {
-        System.out.println("Make general repairs on all your property...");
+    	DialogUtils.showAlert("Make general repairs on all your property...");
         // Not sure about this yet
     }
 
     public void speedingFine() {
-        System.out.println("Speeding fine $15");
+    	DialogUtils.showAlert("Speeding fine $15");
         player.setMoney(player.getMoney() - 15);
     }
 
     public void tripToReadingRailroad() {
-        System.out.println("Take a trip to Reading Railroad. If you pass Go, collect $200");
+    	DialogUtils.showAlert("Take a trip to Reading Railroad. If you pass Go, collect $200");
         player.setPosition(5);
-        // if they pass go collect 200
     }
 
     public void electedChairman() {
-        System.out.println("You have been elected Chairman of the Board. Pay each player $50");
-        // Not sure about this yet
+    	DialogUtils.showAlert("You have been elected Chairman of the Board. Pay each player $50");
     }
 
     public void buildingLoanMatures() {
-        System.out.println("Your building loan matures. Collect $150");
+    	DialogUtils.showAlert("Your building loan matures. Collect $150");
         player.setMoney(player.getMoney() + 150);
     }
 	

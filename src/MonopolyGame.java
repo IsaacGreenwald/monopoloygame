@@ -135,7 +135,7 @@ public class MonopolyGame {
             System.out.println("3. Save Game"); 
             System.out.println("4. Exit");
 
-            int choice = scanner1.nextInt();
+            int choice = scanner1.nextInt(); 
 
             switch (choice) {
                 case 1:

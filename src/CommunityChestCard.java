@@ -57,85 +57,85 @@ public class CommunityChestCard {
 	    }
 
 	    public void advanceToGo() {
-	        System.out.println("Advance to Go (Collect $200)");
+	    	DialogUtils.showAlert("Advance to Go (Collect $200)");
 	        player.setPosition(0);
 	        player.setMoney(player.getMoney() + 200);
 	    }
 
 	    public void bankErrorInYourFavor() {
-	        System.out.println("Bank error in your favor. Collect $200");
+	    	DialogUtils.showAlert("Bank error in your favor. Collect $200");
 	        player.setMoney(player.getMoney() + 200);
 	    }
 
 	    public void doctorsFee() {
-	        System.out.println("Doctor’s fee. Pay $50");
+	    	DialogUtils.showAlert("Doctor’s fee. Pay $50");
 	        player.setMoney(player.getMoney() - 50);
 	    }
 
 	    public void saleOfStock() {
-	        System.out.println("From sale of stock you get $50");
+	    	DialogUtils.showAlert("From sale of stock you get $50");
 	        player.setMoney(player.getMoney() + 50);
 	    }
 
 	    public void getOutOfJailFree() {
-	        System.out.println("Get Out of Jail Free");
-	        System.out.println(player.getName() + " has recieved a get out of jail free card");
+	    	DialogUtils.showAlert("Get Out of Jail Free");
+	    	DialogUtils.showAlert(player.getName() + " has recieved a get out of jail free card");
 	        player.giveGetOutOfJailFreeCard();
 	    }
 
 	    public void goToJail() {
-	        System.out.println("Go to Jail. Go directly to jail, do not pass Go, do not collect $200");
+	    	DialogUtils.showAlert("Go to Jail. Go directly to jail, do not pass Go, do not collect $200");
 	        player.setInJail(true);
 	        player.setPosition(10);
 	    }
 
 	    public void holidayFundMatures() {
-	        System.out.println("Holiday fund matures. Receive $100");
+	    	DialogUtils.showAlert("Holiday fund matures. Receive $100");
 	        player.setMoney(player.getMoney() + 100);
 	    }
 
 	    public void incomeTaxRefund() {
-	        System.out.println("Income tax refund. Collect $20");
+	    	DialogUtils.showAlert("Income tax refund. Collect $20");
 	        player.setMoney(player.getMoney() + 20);
 	    }
 
 	    public void itsYourBirthday() {
-	        System.out.println("It is your birthday. Collect $10 from every player");
+	    	DialogUtils.showAlert("It is your birthday. Collect $10 from every player");
 	        // Not sure about this yet
 	    }
 
 	    public void lifeInsuranceMatures() {
-	        System.out.println("Life insurance matures. Collect $100");
+	    	DialogUtils.showAlert("Life insurance matures. Collect $100");
 	        player.setMoney(player.getMoney() + 100);
 	    }
 
 	    public void payHospitalFees() {
-	        System.out.println("Pay hospital fees of $100");
+	    	DialogUtils.showAlert("Pay hospital fees of $100");
 	        player.setMoney(player.getMoney() - 100);
 	    }
 
 	    public void paySchoolFees() {
-	        System.out.println("Pay school fees of $50");
+	    	DialogUtils.showAlert("Pay school fees of $50");
 	        player.setMoney(player.getMoney() - 50);
 	    }
 
 	    public void receiveConsultancyFee() {
-	        System.out.println("Receive $25 consultancy fee");
+	    	DialogUtils.showAlert("Receive $25 consultancy fee");
 	        player.setMoney(player.getMoney() + 25);
 	    }
 
 	    public void assessedForStreetRepair() {
-	        System.out.println("You are assessed for street repair. $40 per house. $115 per hotel");
+	    	DialogUtils.showAlert("You are assessed for street repair. $40 per house. $115 per hotel");
 	        // Not sure about this yet
 	    }
 
 	    public void wonBeautyContest() {
-	        System.out.println("You have won second prize in a beauty contest. Collect $10");
+	    	DialogUtils.showAlert("You have won second prize in a beauty contest. Collect $10");
 	        player.setMoney(player.getMoney() + 10);
 	    }
 
 	    public void youInherit() {
-	        System.out.println("You inherit $100");
+	    	DialogUtils.showAlert("You inherit $100");
 	        player.setMoney(player.getMoney() + 100);
 	    }
 	}

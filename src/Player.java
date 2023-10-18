@@ -1,10 +1,5 @@
 import java.util.ArrayList;
-import java.util.Optional;
 import java.util.Random;
-
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
 import javafx.scene.image.ImageView;
 import javafx.stage.Window;
 
@@ -67,14 +62,15 @@ public class Player {
 
         if (inJail) {
             if (hasGetOutOfJailFreeCard()) {
-            	promptUser("Do you want to use your 'get out of jail free' card?");
+            	DialogUtils.promptUser("Do you want to use your 'get out of jail free' card?");
                 useGetOutOfJailFreeCard();
-                inJail = false; // Assuming they use the card immediately
-            } else if (jailTurns > 0) {
+                inJail = false; 
+            } else if (jailTurns > 0 || dice1 != dice2) {
                 jailTurns--;
+                DialogUtils.showAlert(getName() + " is still in jail. Skipping turn.");
                 return 0; // Player doesn't move on this turn
             } else {
-                // Player's jail time is up, let them continue from jail position
+                // Player's jail time is up, let them continue from jail position or they rolled doubles
                 inJail = false;
             }
         }
@@ -82,67 +78,29 @@ public class Player {
         if (!inJail) {
             int oldPosition = getPosition();
             setPosition((getPosition() + roll) % Board.getSize());
-            Spot currentSpot = board.getSpot(getPosition());
 
             // Check if the player passes Go and award them money: $200
             if (getPosition() < oldPosition) {                
                 setMoney(getMoney() + 200);
-                showAlert(getName() + " passed 'Go' and collected $200!");
+                DialogUtils.showAlert(getName() + " passed 'Go' and collected $200!");
             }
             // Check if the player rolled doubles
 
             if (dice1 == dice2) {
                 consecutiveDoubles++;
                 if (consecutiveDoubles == 3) {
-                    // Player rolled doubles 3 times in a row send them to jail
                     inJail = true;
-                    return 0; // Player doesn't move further in this turn
-                } else {
-                    // Player rolled doubles take another turn
-                    showAlert(getName() + " rolled doubles! Roll again.");
-                    return roll; // Return the dice roll value for the current turn
+                    DialogUtils.showAlert(getName() + " rolled doubles three times in a row and is now in jail!");
+                    return 0;
                 }
+                DialogUtils.showAlert(getName() + " rolled doubles! Roll again.");
             } else {
-                // Reset consecutive doubles counter
                 consecutiveDoubles = 0;
             }
-            
-
         }
-
-        return roll; // Return the roll value or 0 when in jail
+        return roll;
     }
 
-	/**
-	 * Displays an alert with a given message to the player.
-	 *
-	 * @param message The message to be displayed in the alert.
-	 */
-	private void showAlert(String message) {
-		Alert alert = new Alert(Alert.AlertType.INFORMATION);
-		alert.initOwner(primaryStage); 
-		alert.setTitle("Monopoly Game Info");
-		alert.setHeaderText(null);
-		alert.setContentText(message);
-		alert.showAndWait();
-	}
-	
-	/**
-	 * Prompts the user with a dialog containing a specific message and set of options.
-	 *
-	 * @param message The message to be displayed in the dialog.
-	 * @param options Varargs of ButtonType options for the dialog.
-	 * @return The ButtonType choice selected by the user
-	 */
-	private ButtonType promptUser(String message, ButtonType... options) {
-		Dialog<ButtonType> dialog = new Dialog<>();
-		dialog.initOwner(primaryStage);
-		dialog.setTitle("Property Purchase");
-		dialog.setContentText(message);
-		dialog.getDialogPane().getButtonTypes().addAll(options);
-		Optional<ButtonType> result = dialog.showAndWait();
-		return result.orElse(ButtonType.NO);
-	}
 
 
     // Method to check if the player is in jail
@@ -248,6 +206,11 @@ public class Player {
 	}
 	public void setPrimaryStage(Window primaryStage) {
 	    this.primaryStage = primaryStage;
+	}
+
+	public int getConsecutiveDoubles() {
+		// TODO Auto-generated method stub
+		return consecutiveDoubles;
 	}
 
 }
