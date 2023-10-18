@@ -67,26 +67,52 @@ public class Property implements Spot {
 	 * @return True if the player decides to purchase the property, otherwise false.
 	 */
 	public boolean buyProperty(Player player) {
-		if (this.price > player.getMoney()) {
-			DialogUtils.showAlert("You do not have enough money to purchase this property.");
-			return false;
-		}
+	    boolean playerDecision;
+	    
+	    if (player instanceof ComputerPlayer) {
+	        playerDecision = computerPlayerBuyProperty((ComputerPlayer) player);
+	    } else {
+	        playerDecision = humanPlayerBuyProperty(player);
+	    }
 
-		ButtonType result = DialogUtils.promptUser("Does " + player.getName() + " want to purchase " + this.name + " for $" + this.price + "?",
-				ButtonType.YES, ButtonType.NO);
-
-		if (result == ButtonType.YES) {
-			player.addProperty(this);
-			int newBalance = player.getMoney() - this.price;
-			player.setMoney(newBalance);
-			this.owner = player;
-			DialogUtils.showAlert("You have bought " + this.name + ". You now have: $" + newBalance);
-			return true;
-		}
-
-		DialogUtils.showAlert("Your turn is now over.");
-		return false;
+	    DialogUtils.showAlert("Your turn is now over.");
+	    
+	    return playerDecision;
 	}
+
+private boolean humanPlayerBuyProperty(Player player) {
+    ButtonType result = DialogUtils.promptUser("Does " + player.getName() + " want to purchase " + this.name + " for $" + this.price + "?",
+            ButtonType.YES, ButtonType.NO);
+    boolean wantsToBuy = (result == ButtonType.YES);
+    return proceedWithPurchase(player, wantsToBuy);
+}
+
+
+private boolean computerPlayerBuyProperty(ComputerPlayer player) {
+    Strategy strategy = player.getStrategy();
+    boolean wantsToBuy = strategy.chooseBuyProperty(this, player); 
+    return proceedWithPurchase(player, wantsToBuy);
+}
+
+
+private boolean proceedWithPurchase(Player player, boolean wantsToBuy) {
+    if (this.price > player.getMoney()) {
+        DialogUtils.showAlert("You do not have enough money to purchase this property.");
+        return false;
+    }
+
+    if (wantsToBuy) {
+        player.addProperty(this);
+        int newBalance = player.getMoney() - this.price;
+        player.setMoney(newBalance);
+        this.owner = player;
+        DialogUtils.showAlert("You have bought " + this.name + ". You now have: $" + newBalance);
+        return true;
+    }
+
+    DialogUtils.showAlert("Your turn is now over.");
+    return false;
+}
 
 	/**
 	 * Mortgages the property and adds the mortgage value to the owner's balance.
@@ -169,6 +195,11 @@ public class Property implements Spot {
 
 	public void setOwner(Player player) {
 		this.owner = player;
+	}
+	
+	public int getRent() {
+		return rent; 
+		
 	}
 
 }

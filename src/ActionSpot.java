@@ -45,12 +45,12 @@ public class ActionSpot implements Spot {
 	            System.out.println("PROPERTY");
 	            break;
 	        case CHANCE:
-	            System.out.println("CHANCE CARD");
+	        	DialogUtils.showAlert("CHANCE CARD");
 	            chanceCard = new ChanceCard(player);
 	            if (chanceCard != null) {
 	                chanceCard.pickCard();
 	            } else {
-	                System.out.println("No chance card available.");
+	            	DialogUtils.showAlert("No chance card available.");
 	            }
 	            break;
 	        case COMMUNITY_CHEST:
@@ -59,7 +59,7 @@ public class ActionSpot implements Spot {
 	            if (communityChestCard != null) {
 	                communityChestCard.pickCard();
 	            } else {
-	                System.out.println("No community chest card available.");
+	                DialogUtils.showAlert("No community chest card available.");
 	            }
 	            break;
 	        case LUXURY_TAX:
@@ -82,7 +82,7 @@ public class ActionSpot implements Spot {
 	            break;
 	        case GO_TO_JAIL:
                 sendToJail(player);
-	            System.out.println("GO TO JAIL");
+                DialogUtils.showAlert("GO TO JAIL");
 	            break;
 	        default:
 	            System.out.println("UNKNOWN ACTION");

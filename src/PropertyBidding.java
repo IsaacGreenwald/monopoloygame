@@ -71,7 +71,7 @@ public class PropertyBidding extends Property {
      */
     protected boolean askForBidding(Player player) {
         System.out.println("Does " + player.getName() + " want to bid on " + getName() + " for $" + currentBid + "?");
-        ButtonType result = promptUser("Does " + player.getName() + " want to bid on " + getName() + " for $" + currentBid + "?",
+        ButtonType result = DialogUtils.promptUser("Does " + player.getName() + " want to bid on " + getName() + " for $" + currentBid + "?",
                 ButtonType.YES, ButtonType.NO);
 
         return result == ButtonType.YES;
@@ -84,7 +84,7 @@ public class PropertyBidding extends Property {
      */
     protected boolean askForIncrease(Player bidder) {
         System.out.println("Does " + bidder.getName() + " want to increase bid on " + getName() + " for $" + currentBid + "?");
-        ButtonType result = promptUser("Does " + bidder.getName() + " want to increase bid on " + getName() + " for $" + currentBid + "?",
+        ButtonType result = DialogUtils.promptUser("Does " + bidder.getName() + " want to increase bid on " + getName() + " for $" + currentBid + "?",
                 ButtonType.YES, ButtonType.NO);
 
         return result == ButtonType.YES;

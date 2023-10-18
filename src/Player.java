@@ -25,6 +25,8 @@ public class Player {
      * Constructs a new player with the given name and initializes starting money and position.
      *
      * @param name Name of the player.
+     * @param configuration 
+     * @param monopolyPiece 
      */
     public Player(String name) {
         cards = new ArrayList<Property>();
@@ -211,6 +213,11 @@ public class Player {
 	public int getConsecutiveDoubles() {
 		// TODO Auto-generated method stub
 		return consecutiveDoubles;
+	}
+
+	public boolean isComputer() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

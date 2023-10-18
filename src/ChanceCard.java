@@ -152,7 +152,7 @@ public class ChanceCard {
     }
 
     public void tripToReadingRailroad() {
-        System.out.println("Take a trip to Reading Railroad. If you pass Go, collect $200");
+    	DialogUtils.showAlert("Take a trip to Reading Railroad. If you pass Go, collect $200");
         int previousLocation = player.getPosition();
         player.setPosition(5);
         if(previousLocation >= 6) {
@@ -161,21 +161,8 @@ public class ChanceCard {
     }
 
     public void electedChairman() {
-        System.out.println("You have been elected Chairman of the Board. Pay each player $50");
+    	DialogUtils.showAlert("You have been elected Chairman of the Board.");
         
-        // Get the list of computer players
-        ArrayList<ComputerPlayer> cpList = monopolyGame.getComputerPlayerList();
-
-        // Total amount to be deducted from main player
-        int totalPaid = cpList.size() * 50;
-
-        // Pay each computer player $50
-        for (ComputerPlayer cp : cpList) {
-            cp.setMoney(cp.getMoney() + 50);
-        }
-        
-        // Deduct the total paid amount from the main player
-        player.setMoney(player.getMoney() - totalPaid); 
     }
 
 
