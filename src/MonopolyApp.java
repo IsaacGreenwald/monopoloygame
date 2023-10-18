@@ -16,14 +16,17 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Random;
+import java.util.Scanner;
 
 /**
  * This is the main UI class for our monopoly game and it utilizes javaFX
  */
 public class MonopolyApp extends Application {
 	
+	private static final int DEFAULT = 1;
     private VBox playerInfoContainer;
     private Board board;
     private AnchorPane root;
@@ -110,7 +113,7 @@ public class MonopolyApp extends Application {
         gameGrid = grid;
 
 
-
+        
 
         Button rollDiceButton = new Button("Roll Dice");
         rollDiceButton.setOnAction(event -> rollDice(root));
@@ -194,6 +197,7 @@ public class MonopolyApp extends Application {
      * 
      */
     private int numberComputerPlayers() {
+    	
     	return 0;
     }
     
@@ -202,8 +206,34 @@ public class MonopolyApp extends Application {
      * computer players are then added to an arraylist for computer player turns
      * return that array list
      */
-    private ArrayList<ComputerPlayer> getComputerPlayers(){
-    	return null;
+    private ArrayList<ComputerPlayer> getComputerPlayers(int numPlayers){
+    	
+    	Scanner in = new Scanner(System.in);
+		int answer = 0;
+		ArrayList<ComputerPlayer> computerPlayers = new ArrayList<ComputerPlayer>();
+		for(int i = 0; i < numPlayers; i++) {
+			while(answer != 1) {
+				System.out.println("Please enter the strategy for computer player " + i);
+				System.out.println("1: Default");
+				try {
+					answer = in.nextInt();
+					in.nextLine();
+				}catch(InputMismatchException e) {
+					System.out.println("Please choose a valid strategy");
+					in.nextLine();
+				}
+			}
+			switch(answer){
+			case DEFAULT: 
+				ComputerPlayer computerPlayer = new ComputerPlayer(String.valueOf(i), new DefaultStrategy());
+				//MonopolyPiece monopolyPiece = getChosenPiece(in);
+				//computerPlayer.setPiece(monopolyPiece);
+				computerPlayers.add(computerPlayer);
+
+			}
+			answer = 0; //reset strategy for next computer player
+		}
+		return computerPlayers;
     }
 
     /**
