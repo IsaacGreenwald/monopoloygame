@@ -68,6 +68,7 @@ public class ChanceCard {
 	}
 	
     public void advanceToIllinoisAvenue() {
+
     	DialogUtils.showAlert("Advance to Illinois Avenue. If you pass Go, collect $200");
         int previousLocation = player.getPosition();
         player.setPosition(24);
@@ -77,6 +78,7 @@ public class ChanceCard {
     }
 
     public void advanceToStCharlesPlace() {
+
     	DialogUtils.showAlert("Advance to St. Charles Place. If you pass Go, collect $200");
         int previousLocation = player.getPosition();
         player.setPosition(11);

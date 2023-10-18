@@ -26,10 +26,13 @@ public class CommunityChestCard {
 	 private Player player;
 	 private List<Runnable> cards = new ArrayList<>();
 	 private Random random;
+	 private MonopolyGame monopolyGame;
+	 
 
 	    public CommunityChestCard(Player player) {
 	        this.player = player;
 	        this.random = new Random();	 
+	        this.monopolyGame = monopolyGame;
 	        
 	        // Add all methods to the list
 	        cards.add(this::advanceToGo);
@@ -45,7 +48,7 @@ public class CommunityChestCard {
 	        cards.add(this::payHospitalFees);
 	        cards.add(this::paySchoolFees);
 	        cards.add(this::receiveConsultancyFee);
-	        cards.add(this::assessedForStreetRepair);
+	        // cards.add(this::assessedForStreetRepair);
 	        cards.add(this::wonBeautyContest);
 	        cards.add(this::youInherit);
 	        
@@ -100,6 +103,7 @@ public class CommunityChestCard {
 	    }
 
 	    public void itsYourBirthday() {
+
 		        DialogUtils.showAlert("It is your birthday. Collect $10 from every player.");
 		        
 		        // Get the number of computer players
@@ -139,10 +143,10 @@ public class CommunityChestCard {
 	        player.setMoney(player.getMoney() + 25);
 	    }
 
+
 	    public void assessedForStreetRepair() {
 	    	DialogUtils.showAlert("You are assessed for street repair. $40 per house. $115 per hotel");
-	        // Not sure about this yet
-	    }
+
 
 	    public void wonBeautyContest() {
 	    	DialogUtils.showAlert("You have won second prize in a beauty contest. Collect $10");

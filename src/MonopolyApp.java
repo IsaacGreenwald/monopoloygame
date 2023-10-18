@@ -16,9 +16,12 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Pair;
-import javafx.scene.control.Alert;
+
 import javafx.scene.control.Button;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -32,7 +35,7 @@ public class MonopolyApp extends Application {
     private VBox playerInfoContainer;
     private Board board;
     private AnchorPane root;
-
+    private GameDatabaseOperations dbOps;
     private GridPane gameGrid; 
 
 
@@ -63,6 +66,12 @@ public class MonopolyApp extends Application {
  */
     @Override
     public void start(Stage primaryStage) {
+	// Create and initialize the database connection
+    Connection dbConnection = initializeDatabaseConnection();
+
+    // Create an instance of GameDatabaseOperations and pass the connection
+    dbOps = new GameDatabaseOperations(dbConnection);
+
     this.primaryStage = primaryStage;
     board = new Board(primaryStage);
     Image boardImage = new Image(getClass().getClassLoader().getResource("background1.jpg").toExternalForm());
@@ -111,18 +120,27 @@ public class MonopolyApp extends Application {
     
     root.getChildren().add(grid);
     gameGrid = grid;
-    
+    Button saveButton = new Button("Save");
+    saveButton.setPrefWidth(100);
+    saveButton.setPrefHeight(40);
+    saveButton.setOnAction(event -> onSaveButtonPressed());
+    saveButton.getStyleClass().add("custom-button");
+
+
+
+   
     Button rollDiceButton = new Button("ROLL DICE");
     rollDiceButton.setPrefWidth(250);
     rollDiceButton.setPrefHeight(40);
     rollDiceButton.setOnAction(event -> onDiceRollButtonPressed(root));
     rollDiceButton.getStyleClass().add("custom-button");
     HBox buttonBox = new HBox(10);
-    buttonBox.getChildren().add(rollDiceButton);
+    buttonBox.getChildren().addAll(rollDiceButton, saveButton);
     buttonBox.setLayoutX(10.0);
     buttonBox.setLayoutY(10.0);
     root.getChildren().add(buttonBox);
     
+
     
     Button MortgageButton = new Button("MORTGAGE PROPERTIES");
     MortgageButton.setPrefWidth(300);
@@ -142,11 +160,46 @@ public class MonopolyApp extends Application {
     scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
     primaryStage.setScene(scene);
     primaryStage.setTitle("Monopoly Game");
+    primaryStage.setMaximized(true);
+    primaryStage.show();
+    }
+    private Connection initializeDatabaseConnection() {
+        Connection connection = null;
+        try {
+            // Initialize your database connection here
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/MonopolyGame", "root", "root");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.err.println("Error while connecting to the database: " + e.getMessage());
+        }
+        return connection;
+    }
+    private void onSaveButtonPressed() {
+        // Get the current player who will be saved to the database
+        Player currentPlayer = getCurrentPlayer();
+        // Insert the new player into the database
+        try {
+            dbOps.insertPlayer(currentPlayer.getName(), currentPlayer.getMoney(), currentPlayer.getPosition());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        // Call the save game method from your database operations class
+        try {
+            dbOps.updatePlayerMoney(currentPlayer.getName(), currentPlayer.getMoney());
+            System.out.println("Player's money updated successfully!");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }                   
+        try {
+            dbOps.saveGame(currentPlayer.getName(), currentPlayer.getMoney(), currentPlayer.getPosition(), board);
+            System.out.println("Game saved successfully!");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     primaryStage.setFullScreen(true);
 
     primaryStage.show();
     }
-
 
 
     /**
@@ -185,6 +238,7 @@ public class MonopolyApp extends Application {
         Player currentPlayer = getCurrentPlayer();
 
 
+
         int[] diceResults = rollDice(anchorPane);
         int dice1 = diceResults[0];
         int dice2 = diceResults[1];
@@ -202,7 +256,6 @@ public class MonopolyApp extends Application {
         positionPlayerOnBoard(currentPlayer, currentPlayer.getPosition());
 
         Spot landedSpot = board.getSpot(currentPlayer.getPosition());
-        System.out.println("Spot " + currentPlayer.getPosition());
 
         if(landedSpot == null) {
             System.out.println("Error: Spot not found at position " + currentPlayer.getPosition());
@@ -211,6 +264,7 @@ public class MonopolyApp extends Application {
 
         if (landedSpot instanceof Property) {
             showSpotInfo(currentPlayer, currentPlayer.getPosition()); 
+        }
             positionPlayerOnBoard(currentPlayer, currentPlayer.getPosition());
 
         }
@@ -531,4 +585,3 @@ public class MonopolyApp extends Application {
 	
     
 }
-
