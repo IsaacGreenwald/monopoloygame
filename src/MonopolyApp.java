@@ -198,7 +198,21 @@ public class MonopolyApp extends Application {
      */
     private int numberComputerPlayers() {
     	
-    	return 0;
+    	Scanner in = new Scanner(System.in);
+		int answer = 0;
+		while(answer < 1 || answer > 3) {
+			System.out.println("How many computers would you like to play against?(1-3)");
+
+			try {
+				answer = in.nextInt();
+				in.nextLine();
+			}catch(InputMismatchException e) {
+				System.out.println("Please enter a valid integer 1-3");
+				in.nextLine();
+
+			}
+		}
+		return answer;
     }
     
     /**
