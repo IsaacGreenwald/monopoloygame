@@ -1,3 +1,7 @@
+Software Design Final Project: Monopoly GUI <br>
+<br>
+Yunus Bolat, Quinn Sebso, Isaac Greenwald and Nick ___ 
+
 Installation and Use Guide:
 
 This is our implementation of a Monopoly Game using javaFX. We have a GUI that operates a board and allows you to roll dice while collecting properties and rent with other bot players doing the same. 
